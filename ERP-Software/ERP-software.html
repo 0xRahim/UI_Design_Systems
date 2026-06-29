@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Orion ERP — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ===== DESIGN TOKENS ===== */
+:root {
+  /* Brand */
+  --brand-50:  #EEEDFE;
+  --brand-100: #D4D2FB;
+  --brand-400: #7F77DD;
+  --brand-500: #6C63D0;
+  --brand-600: #534AB7;
+  --brand-700: #3C3489;
+
+  /* Semantic */
+  --success-50:  #EAF3DE;
+  --success-500: #3B6D11;
+  --success-600: #27500A;
+  --danger-50:   #FCEBEB;
+  --danger-400:  #E24B4A;
+  --danger-600:  #A32D2D;
+  --warning-50:  #FAEEDA;
+  --warning-400: #EF9F27;
+  --warning-600: #854F0B;
+  --info-50:     #E6F1FB;
+  --info-400:    #378ADD;
+  --info-600:    #185FA5;
+
+  /* Neutral */
+  --gray-0:   #FFFFFF;
+  --gray-50:  #F7F7F7;
+  --gray-100: #F1F0EF;
+  --gray-150: #E8E7E6;
+  --gray-200: #D3D1C7;
+  --gray-300: #B4B2A9;
+  --gray-400: #888780;
+  --gray-500: #5F5E5A;
+  --gray-600: #444441;
+  --gray-700: #2C2C2A;
+
+  /* Surfaces */
+  --surface-page:  #F1F0EF;
+  --surface-card:  #FFFFFF;
+  --surface-hover: #F7F7F7;
+
+  /* Borders */
+  --border:        #E8E7E6;
+  --border-strong: #D3D1C7;
+  --border-focus:  #6C63D0;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 1px 4px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+
+  /* Radius */
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --dur-fast: 100ms;
+  --dur-base: 150ms;
+  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Font */
+  --font: 'Inter', system-ui, sans-serif;
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); font-size: 14px; color: var(--gray-700); background: var(--surface-page); line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+input { font-family: var(--font); }
+svg { display: block; }
+
+/* ===== DOC SHELL ===== */
+.ds-shell { display: flex; min-height: 100vh; }
+
+.ds-nav {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface-card);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.ds-nav-logo {
+  padding: 0 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.ds-nav-logo-icon {
+  width: 32px; height: 32px;
+  background: var(--brand-500);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+}
+.ds-nav-logo-icon svg { width: 16px; height: 16px; color: white; }
+.ds-nav-logo-text { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+.ds-nav-logo-sub { font-size: 11px; color: var(--gray-400); }
+
+.ds-nav-group { margin-bottom: 4px; }
+.ds-nav-label {
+  padding: 8px 16px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+}
+.ds-nav-item {
+  display: block;
+  padding: 6px 16px;
+  font-size: 13px;
+  color: var(--gray-500);
+  border-radius: 0;
+  transition: color var(--dur-fast), background var(--dur-fast);
+  cursor: pointer;
+}
+.ds-nav-item:hover { color: var(--gray-700); background: var(--gray-50); }
+.ds-nav-item.active { color: var(--brand-600); font-weight: 500; background: var(--brand-50); }
+
+.ds-content {
+  flex: 1;
+  min-width: 0;
+  padding: 40px 48px;
+  max-width: 1100px;
+}
+
+.section { display: none; }
+.section.visible { display: block; }
+
+/* ===== DOC TYPOGRAPHY ===== */
+.doc-hero { margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 32px; }
+.doc-hero h1 { font-size: 28px; font-weight: 600; color: var(--gray-700); margin-bottom: 8px; }
+.doc-hero p { font-size: 15px; color: var(--gray-500); max-width: 560px; line-height: 1.6; }
+
+.doc-section { margin-bottom: 56px; }
+.doc-section h2 { font-size: 18px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
+.doc-section-sub { font-size: 13px; color: var(--gray-400); margin-bottom: 24px; }
+
+.doc-sub { margin-bottom: 32px; }
+.doc-sub h3 { font-size: 13px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+
+.preview-box {
+  background: var(--surface-page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  margin-bottom: 8px;
+}
+.preview-box.white { background: var(--surface-card); }
+.preview-box.dark  { background: var(--gray-700); }
+
+.token-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.token-table th { text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gray-400); border-bottom: 1px solid var(--border); }
+.token-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--gray-600); font-family: 'JetBrains Mono', monospace; font-size: 12px; vertical-align: middle; }
+.token-table td:first-child { color: var(--gray-500); font-weight: 500; }
+.token-table tr:last-child td { border-bottom: none; }
+.token-swatch { width: 20px; height: 20px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.08); display: inline-block; vertical-align: middle; }
+
+/* ===== COMPONENT: BUTTON ===== */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 14px; height: 36px;
+  font-size: 14px; font-weight: 500; font-family: var(--font);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer; transition: all var(--dur-base) var(--ease);
+  white-space: nowrap;
+}
+.btn-sm  { height: 30px; padding: 0 10px; font-size: 13px; }
+.btn-lg  { height: 40px; padding: 0 18px; font-size: 15px; }
+.btn-icon { width: 36px; padding: 0; justify-content: center; }
+.btn-icon.btn-sm { width: 30px; }
+.btn-icon.btn-lg { width: 40px; }
+
+.btn-primary   { background: var(--brand-500); color: #fff; }
+.btn-primary:hover { background: var(--brand-600); }
+.btn-secondary { background: var(--surface-card); color: var(--gray-600); border-color: var(--border-strong); }
+.btn-secondary:hover { background: var(--gray-50); color: var(--gray-700); }
+.btn-ghost     { color: var(--gray-500); }
+.btn-ghost:hover { background: var(--gray-100); color: var(--gray-700); }
+.btn-danger    { background: var(--danger-400); color: #fff; }
+.btn-danger:hover { background: var(--danger-600); }
+.btn-link      { color: var(--brand-500); }
+.btn-link:hover { color: var(--brand-600); }
+
+/* ===== COMPONENT: BADGE ===== */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px; font-weight: 500;
+  border-radius: var(--radius-sm);
+  line-height: 1.4;
+}
+.badge-default  { background: var(--gray-100); color: var(--gray-600); }
+.badge-brand    { background: var(--brand-50);   color: var(--brand-600); }
+.badge-success  { background: var(--success-50); color: var(--success-500); }
+.badge-danger   { background: var(--danger-50);  color: var(--danger-600); }
+.badge-warning  { background: var(--warning-50); color: var(--warning-600); }
+.badge-info     { background: var(--info-50);    color: var(--info-600); }
+.badge-dot::before { content: ''; width: 5px; height: 5px; border-radius: var(--radius-full); background: currentColor; display: inline-block; }
+
+/* ===== COMPONENT: INPUT ===== */
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-size: 12px; font-weight: 500; color: var(--gray-600); }
+.field-hint  { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+.field-error { font-size: 12px; color: var(--danger-600); margin-top: 4px; }
+
+.input {
+  height: 36px; width: 100%;
+  padding: 0 12px;
+  font-size: 14px; font-family: var(--font); color: var(--gray-700);
+  background: var(--surface-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+.input::placeholder { color: var(--gray-300); }
+.input:hover  { border-color: var(--gray-300); }
+.input:focus  { border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--brand-50); }
+.input.error  { border-color: var(--danger-400); }
+.input.error:focus { box-shadow: 0 0 0 3px var(--danger-50); }
+.input-with-icon { position: relative; }
+.input-with-icon .input { padding-left: 36px; }
+.input-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--gray-300); pointer-events: none;
+}
+.input-with-kbd { position: relative; }
+.input-with-kbd .input { padding-right: 52px; }
+.input-kbd {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  display: flex; gap: 2px;
+}
+.kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 20px; padding: 0 5px;
+  font-size: 10px; font-weight: 500; color: var(--gray-400);
+  background: var(--gray-100); border: 1px solid var(--border-strong);
+  border-radius: 4px; line-height: 1;
+}
+
+/* ===== COMPONENT: CARD ===== */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+}
+.card-sm { padding: 14px 16px; border-radius: var(--radius-lg); }
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.card-title { font-size: 14px; font-weight: 500; color: var(--gray-700); }
+.card-sub   { font-size: 12px; color: var(--gray-400); }
+
+/* ===== COMPONENT: STAT CARD ===== */
+.stat-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.stat-card-left {}
+.stat-label  { font-size: 12px; color: var(--gray-400); margin-bottom: 6px; }
+.stat-value  { font-size: 24px; font-weight: 600; color: var(--gray-700); line-height: 1.1; margin-bottom: 10px; }
+.stat-delta  { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; }
+.stat-delta.up   { color: var(--success-500); }
+.stat-delta.down { color: var(--danger-600); }
+.stat-delta-label { color: var(--gray-400); font-weight: 400; }
+
+.stat-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-lg);
+  background: var(--brand-50);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* ===== COMPONENT: NAV SIDEBAR ===== */
+.sidebar-demo {
+  width: 220px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  font-size: 13px;
+}
+.sidebar-top {
+  padding: 14px 12px 12px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo-box {
+  width: 30px; height: 30px; background: var(--brand-500);
+  border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+}
+.sidebar-logo-box svg { width: 14px; height: 14px; color: white; }
+.sidebar-logo-name { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+.sidebar-logo-ver  { font-size: 10px; color: var(--gray-400); }
+.sb-group { padding: 10px 0 4px; }
+.sb-label { padding: 4px 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-400); }
+.sb-item {
+  display: flex; align-items: center; gap: 8px;
+  margin: 1px 6px;
+  padding: 7px 10px;
+  border-radius: var(--radius-md);
+  color: var(--gray-500);
+  font-size: 13px;
+  cursor: pointer; transition: all var(--dur-fast);
+}
+.sb-item:hover { background: var(--gray-50); color: var(--gray-700); }
+.sb-item.active { background: var(--brand-50); color: var(--brand-600); font-weight: 500; }
+.sb-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+.sidebar-foot {
+  border-top: 1px solid var(--border);
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.avatar-sm {
+  width: 28px; height: 28px; border-radius: var(--radius-full);
+  background: var(--brand-100); color: var(--brand-600);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; flex-shrink: 0;
+}
+.foot-name  { font-size: 12px; font-weight: 500; color: var(--gray-700); }
+.foot-email { font-size: 11px; color: var(--gray-400); }
+
+/* ===== COMPONENT: TOPBAR ===== */
+.topbar-demo {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 0 16px;
+  height: 52px;
+  display: flex; align-items: center; gap: 12px;
+}
+.topbar-breadcrumb { display: flex; align-items: center; gap: 6px; flex: 1; font-size: 13px; color: var(--gray-500); }
+.topbar-breadcrumb svg { width: 16px; height: 16px; color: var(--gray-400); }
+.bc-sep { color: var(--gray-300); }
+.bc-current { color: var(--gray-700); font-weight: 500; }
+
+.topbar-search {
+  position: relative; width: 200px;
+}
+.topbar-search input {
+  width: 100%; height: 32px;
+  padding: 0 48px 0 32px;
+  font-size: 13px; font-family: var(--font); color: var(--gray-600);
+  background: var(--gray-50); border: 1px solid var(--border);
+  border-radius: var(--radius-md); outline: none;
+}
+.topbar-search input:focus { border-color: var(--border-focus); background: white; }
+.topbar-search .ts-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--gray-300); }
+.topbar-search .ts-icon svg { width: 14px; height: 14px; }
+.topbar-kbd { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); }
+
+.topbar-actions { display: flex; align-items: center; gap: 4px; }
+.tb-action {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-500); cursor: pointer;
+  transition: background var(--dur-fast);
+  position: relative;
+}
+.tb-action:hover { background: var(--gray-100); color: var(--gray-700); }
+.tb-action svg { width: 16px; height: 16px; }
+.tb-dot {
+  width: 7px; height: 7px; background: var(--danger-400);
+  border-radius: var(--radius-full); border: 2px solid white;
+  position: absolute; top: 4px; right: 4px;
+}
+.tb-count {
+  height: 18px; min-width: 18px; padding: 0 4px;
+  background: var(--brand-500); color: white;
+  font-size: 10px; font-weight: 600;
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  position: absolute; top: 2px; right: 2px;
+}
+.topbar-new-task {
+  height: 32px; padding: 0 12px;
+  background: var(--brand-600); color: white;
+  font-size: 12px; font-weight: 500; font-family: var(--font);
+  border: none; border-radius: var(--radius-md);
+  display: flex; align-items: center; gap: 5px; cursor: pointer;
+  transition: background var(--dur-fast);
+}
+.topbar-new-task:hover { background: var(--brand-700); }
+.topbar-new-task svg { width: 14px; height: 14px; }
+
+/* ===== COMPONENT: TABLE ===== */
+.ds-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ds-table th {
+  text-align: left; padding: 10px 14px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--gray-400);
+  border-bottom: 1px solid var(--border);
+  background: var(--gray-50);
+}
+.ds-table th:first-child { border-radius: var(--radius-md) 0 0 0; }
+.ds-table th:last-child  { border-radius: 0 var(--radius-md) 0 0; }
+.ds-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--gray-600); vertical-align: middle; }
+.ds-table td:first-child { color: var(--gray-700); font-weight: 500; }
+.ds-table tr:last-child td { border-bottom: none; }
+.ds-table tr:hover td { background: var(--gray-50); }
+
+/* ===== COMPONENT: DROPDOWN / SELECT ===== */
+.select-wrap { position: relative; display: inline-block; }
+.select-wrap select {
+  height: 36px; padding: 0 32px 0 12px;
+  font-size: 14px; font-family: var(--font); color: var(--gray-600);
+  background: var(--surface-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  outline: none; appearance: none; cursor: pointer;
+  transition: border-color var(--dur-fast);
+}
+.select-wrap select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--brand-50); }
+.select-caret {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--gray-400); pointer-events: none;
+}
+.select-caret svg { width: 14px; height: 14px; }
+
+/* ===== COMPONENT: TOGGLE ===== */
+.toggle-wrap { display: flex; align-items: center; gap: 10px; }
+.toggle {
+  width: 40px; height: 22px; border-radius: var(--radius-full);
+  background: var(--gray-200); border: none; cursor: pointer;
+  position: relative; transition: background var(--dur-base) var(--ease);
+  flex-shrink: 0;
+}
+.toggle.on { background: var(--brand-500); }
+.toggle::after {
+  content: ''; position: absolute;
+  width: 16px; height: 16px; border-radius: var(--radius-full);
+  background: white; top: 3px; left: 3px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-base) var(--ease);
+}
+.toggle.on::after { transform: translateX(18px); }
+.toggle-label { font-size: 14px; color: var(--gray-600); }
+.toggle-hint  { font-size: 12px; color: var(--gray-400); }
+
+/* ===== COMPONENT: AVATAR ===== */
+.avatar {
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; flex-shrink: 0;
+  background: var(--brand-100); color: var(--brand-600);
+}
+.avatar-xs  { width: 24px; height: 24px; font-size: 9px; }
+.avatar-sm  { width: 32px; height: 32px; font-size: 12px; }
+.avatar-md  { width: 40px; height: 40px; font-size: 14px; }
+.avatar-lg  { width: 48px; height: 48px; font-size: 17px; }
+.avatar-xl  { width: 64px; height: 64px; font-size: 22px; }
+.avatar-status { position: relative; display: inline-block; }
+.status-dot {
+  position: absolute; bottom: 1px; right: 1px;
+  width: 9px; height: 9px; border-radius: var(--radius-full);
+  border: 2px solid white;
+}
+.status-dot.online  { background: var(--success-500); }
+.status-dot.offline { background: var(--gray-300); }
+.status-dot.busy    { background: var(--danger-400); }
+
+/* ===== COMPONENT: TOAST ===== */
+.toast {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 300px;
+  font-size: 13px;
+}
+.toast-icon { flex-shrink: 0; margin-top: 1px; }
+.toast-icon svg { width: 16px; height: 16px; }
+.toast-success .toast-icon { color: var(--success-500); }
+.toast-danger  .toast-icon { color: var(--danger-400); }
+.toast-warning .toast-icon { color: var(--warning-400); }
+.toast-info    .toast-icon { color: var(--info-400); }
+.toast-title   { font-weight: 500; color: var(--gray-700); margin-bottom: 2px; }
+.toast-body    { color: var(--gray-500); }
+.toast-close { margin-left: auto; color: var(--gray-300); cursor: pointer; flex-shrink: 0; }
+.toast-close svg { width: 14px; height: 14px; }
+
+/* ===== COMPONENT: EMPTY STATE ===== */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 48px 24px; text-align: center;
+}
+.empty-icon {
+  width: 56px; height: 56px; border-radius: var(--radius-xl);
+  background: var(--gray-100); color: var(--gray-300);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+}
+.empty-icon svg { width: 28px; height: 28px; }
+.empty-title { font-size: 15px; font-weight: 500; color: var(--gray-700); margin-bottom: 6px; }
+.empty-body  { font-size: 13px; color: var(--gray-400); max-width: 280px; line-height: 1.6; margin-bottom: 20px; }
+
+/* ===== COMPONENT: BREADCRUMB ===== */
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.breadcrumb-icon { color: var(--gray-400); display: flex; }
+.breadcrumb-icon svg { width: 14px; height: 14px; }
+.bc-link { color: var(--gray-500); }
+.bc-link:hover { color: var(--gray-700); }
+.bc-sep-char { color: var(--gray-300); }
+
+/* ===== COMPONENT: CHART LEGEND ===== */
+.chart-legend { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray-500); }
+.legend-dot  { width: 8px; height: 8px; border-radius: var(--radius-full); }
+
+/* ===== COMPONENT: PROGRESS ===== */
+.progress-wrap { width: 100%; }
+.progress-track {
+  height: 6px; border-radius: var(--radius-full);
+  background: var(--gray-150); overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: var(--radius-full); transition: width 0.4s var(--ease); }
+
+/* ===== COMPONENT: SKELETON ===== */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--gray-150) 25%, var(--gray-100) 50%, var(--gray-150) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+/* ===== PATTERNS ===== */
+.delta-row { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; }
+.delta-up   { color: var(--success-500); }
+.delta-down { color: var(--danger-600); }
+.delta-label { color: var(--gray-400); font-weight: 400; }
+
+/* ===== LAYOUT AIDS ===== */
+.row  { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+.col  { display: flex; flex-direction: column; gap: 12px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+.spacer-sm { height: 12px; }
+.spacer-md { height: 20px; }
+
+/* ===== MINI BAR CHART ===== */
+.mini-bars { display: flex; align-items: flex-end; gap: 2px; height: 32px; }
+.mini-bar { flex: 1; border-radius: 2px 2px 0 0; min-width: 3px; }
+
+/* ===== PROGRESS RING ===== */
+.ring-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.ring-label { position: absolute; text-align: center; }
+
+/* ===== TYPOGRAPHY SAMPLES ===== */
+.type-row { display: flex; align-items: baseline; gap: 20px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.type-row:last-child { border-bottom: none; }
+.type-meta { font-size: 11px; color: var(--gray-400); font-family: monospace; min-width: 160px; }
+.type-sample { color: var(--gray-700); }
+
+/* ===== MINI SPARKLINE ===== */
+.sparkline { display: inline-block; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .ds-nav { display: none; }
+  .ds-content { padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="ds-shell">
+
+  <!-- SIDEBAR NAV -->
+  <nav class="ds-nav">
+    <div class="ds-nav-logo">
+      <div class="ds-nav-logo-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/>
+          <rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/>
+        </svg>
+      </div>
+      <div>
+        <div class="ds-nav-logo-text">Orion ERP</div>
+        <div style="font-size:10px;color:var(--gray-400)">Design System v1.0</div>
+      </div>
+    </div>
+
+    <div class="ds-nav-group">
+      <div class="ds-nav-label">Foundation</div>
+      <a class="ds-nav-item active" onclick="show('tokens')">Design tokens</a>
+      <a class="ds-nav-item" onclick="show('typography')">Typography</a>
+      <a class="ds-nav-item" onclick="show('color')">Color system</a>
+      <a class="ds-nav-item" onclick="show('spacing')">Spacing & layout</a>
+    </div>
+    <div class="ds-nav-group">
+      <div class="ds-nav-label">Components</div>
+      <a class="ds-nav-item" onclick="show('buttons')">Buttons</a>
+      <a class="ds-nav-item" onclick="show('inputs')">Inputs & forms</a>
+      <a class="ds-nav-item" onclick="show('badges')">Badges & tags</a>
+      <a class="ds-nav-item" onclick="show('cards')">Cards & stats</a>
+      <a class="ds-nav-item" onclick="show('navigation')">Navigation</a>
+      <a class="ds-nav-item" onclick="show('tables')">Tables</a>
+      <a class="ds-nav-item" onclick="show('feedback')">Feedback & alerts</a>
+      <a class="ds-nav-item" onclick="show('avatars')">Avatars</a>
+      <a class="ds-nav-item" onclick="show('dataviz')">Data visualization</a>
+    </div>
+    <div class="ds-nav-group">
+      <div class="ds-nav-label">Patterns</div>
+      <a class="ds-nav-item" onclick="show('patterns')">UI patterns</a>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="ds-content">
+
+    <!-- ===== TOKENS ===== -->
+    <div class="section visible" id="section-tokens">
+      <div class="doc-hero">
+        <h1>Design tokens</h1>
+        <p>The single source of truth for all visual decisions. Every color, spacing unit, radius, and motion value is defined as a CSS custom property.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Core token map</h2>
+        <p class="doc-section-sub">Reference these custom properties in all component CSS.</p>
+
+        <div class="doc-sub">
+          <h3>Surfaces</h3>
+          <div class="preview-box" style="padding:16px">
+            <table class="token-table">
+              <thead><tr><th>Token</th><th>Value</th><th>Swatch</th><th>Usage</th></tr></thead>
+              <tbody>
+                <tr><td>--surface-page</td><td>#F1F0EF</td><td><span class="token-swatch" style="background:#F1F0EF"></span></td><td style="font-family:var(--font);font-size:12px;color:var(--gray-500)">Outer canvas</td></tr>
+                <tr><td>--surface-card</td><td>#FFFFFF</td><td><span class="token-swatch" style="background:#FFFFFF"></span></td><td style="font-family:var(--font);font-size:12px;color:var(--gray-500)">Cards, panels</td></tr>
+                <tr><td>--surface-hover</td><td>#F7F7F7</td><td><span class="token-swatch" style="background:#F7F7F7"></span></td><td style="font-family:var(--font);font-size:12px;color:var(--gray-500)">Row hover</td></tr>
+                <tr><td>--border</td><td>#E8E7E6</td><td><span class="token-swatch" style="background:#E8E7E6"></span></td><td style="font-family:var(--font);font-size:12px;color:var(--gray-500)">Default hairline</td></tr>
+                <tr><td>--border-strong</td><td>#D3D1C7</td><td><span class="token-swatch" style="background:#D3D1C7"></span></td><td style="font-family:var(--font);font-size:12px;color:var(--gray-500)">Inputs, emphasis</td></tr>
+                <tr><td>--border-focus</td><td>#6C63D0</td><td><span class="token-swatch" style="background:#6C63D0"></span></td><td style="font-family:var(--font);font-size:12px;color:var(--gray-500)">Focus ring</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="doc-sub">
+          <h3>Shadows</h3>
+          <div class="preview-box">
+            <div class="row" style="align-items:stretch">
+              <div style="flex:1;background:white;border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);text-align:center">
+                <div style="font-size:12px;color:var(--gray-400);margin-bottom:4px">--shadow-sm</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--gray-500)">0 1px 2px rgba(0,0,0,0.05)</div>
+              </div>
+              <div style="flex:1;background:white;border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-md);text-align:center">
+                <div style="font-size:12px;color:var(--gray-400);margin-bottom:4px">--shadow-md</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--gray-500)">cards, panels</div>
+              </div>
+              <div style="flex:1;background:white;border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-lg);text-align:center">
+                <div style="font-size:12px;color:var(--gray-400);margin-bottom:4px">--shadow-lg</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--gray-500)">dropdowns, modals</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-sub">
+          <h3>Radius</h3>
+          <div class="preview-box">
+            <div class="row">
+              <div style="width:60px;height:36px;background:var(--brand-50);border:1px solid var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--brand-600)">sm 4px</div>
+              <div style="width:60px;height:36px;background:var(--brand-50);border:1px solid var(--border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--brand-600)">md 6px</div>
+              <div style="width:60px;height:36px;background:var(--brand-50);border:1px solid var(--border);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--brand-600)">lg 8px</div>
+              <div style="width:60px;height:36px;background:var(--brand-50);border:1px solid var(--border);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--brand-600)">xl 12px</div>
+              <div style="width:80px;height:36px;background:var(--brand-50);border:1px solid var(--border);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--brand-600)">full 9999px</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TYPOGRAPHY ===== -->
+    <div class="section" id="section-typography">
+      <div class="doc-hero">
+        <h1>Typography</h1>
+        <p>Inter at a restrained 3-weight scale. Sentence case always. Size encodes hierarchy — weight reinforces it.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Type scale</h2>
+        <p class="doc-section-sub">Font: Inter. Weights: 400 regular, 500 medium, 600 semibold.</p>
+        <div class="preview-box white">
+          <div class="type-row"><span class="type-meta">display / 28 / 600</span><span class="type-sample" style="font-size:28px;font-weight:600">Dashboard overview</span></div>
+          <div class="type-row"><span class="type-meta">heading-lg / 22 / 500</span><span class="type-sample" style="font-size:22px;font-weight:500">Financial reports</span></div>
+          <div class="type-row"><span class="type-meta">heading / 18 / 500</span><span class="type-sample" style="font-size:18px;font-weight:500">Shortcuts analytics</span></div>
+          <div class="type-row"><span class="type-meta">heading-sm / 16 / 500</span><span class="type-sample" style="font-size:16px;font-weight:500">Project overview</span></div>
+          <div class="type-row"><span class="type-meta">body-lg / 15 / 400</span><span class="type-sample" style="font-size:15px">Lead paragraph or card intro text</span></div>
+          <div class="type-row"><span class="type-meta">body / 14 / 400</span><span class="type-sample" style="font-size:14px">Default body text for all content areas and descriptions.</span></div>
+          <div class="type-row"><span class="type-meta">body-sm / 13 / 400</span><span class="type-sample" style="font-size:13px;color:var(--gray-500)">Secondary body, sidebar navigation items</span></div>
+          <div class="type-row"><span class="type-meta">label / 12 / 500</span><span class="type-sample" style="font-size:12px;font-weight:500;letter-spacing:0.01em">Form label / column header</span></div>
+          <div class="type-row"><span class="type-meta">caption / 11 / 400</span><span class="type-sample" style="font-size:11px;color:var(--gray-400)">Timestamp · Footnote · Helper text</span></div>
+        </div>
+      </div>
+      <div class="doc-section">
+        <h2>In context</h2>
+        <p class="doc-section-sub">How hierarchy works across a realistic card.</p>
+        <div class="preview-box">
+          <div class="card" style="max-width:360px">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--gray-400);margin-bottom:4px">One year statement</div>
+            <div style="font-size:18px;font-weight:500;color:var(--gray-700);margin-bottom:16px">Shortcuts analytics</div>
+            <div style="display:flex;gap:24px">
+              <div><div style="font-size:11px;color:var(--gray-400)">Income</div><div style="font-size:22px;font-weight:600;color:var(--gray-700)">72</div></div>
+              <div><div style="font-size:11px;color:var(--gray-400)">Expense</div><div style="font-size:22px;font-weight:600;color:var(--gray-700)">72</div></div>
+              <div><div style="font-size:11px;color:var(--gray-400)">Net profits</div><div style="font-size:22px;font-weight:600;color:var(--gray-700)">72</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COLOR ===== -->
+    <div class="section" id="section-color">
+      <div class="doc-hero">
+        <h1>Color system</h1>
+        <p>Brand violet as the single accent. Semantic colors for state only — success, warning, danger, info. Gray scale for all neutral UI.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Brand ramp</h2>
+        <div class="preview-box" style="padding:16px">
+          <div class="row" style="flex-wrap:nowrap;gap:4px">
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;align-items:center">
+              <div style="width:100%;height:44px;background:var(--brand-50);border-radius:4px;border:1px solid var(--border)"></div>
+              <span style="font-size:10px;color:var(--gray-400)">50</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;align-items:center">
+              <div style="width:100%;height:44px;background:var(--brand-100);border-radius:4px"></div>
+              <span style="font-size:10px;color:var(--gray-400)">100</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;align-items:center">
+              <div style="width:100%;height:44px;background:var(--brand-400);border-radius:4px"></div>
+              <span style="font-size:10px;color:var(--gray-400)">400</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;align-items:center">
+              <div style="width:100%;height:44px;background:var(--brand-500);border-radius:4px"></div>
+              <span style="font-size:10px;color:var(--gray-400)">500 ●</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;align-items:center">
+              <div style="width:100%;height:44px;background:var(--brand-600);border-radius:4px"></div>
+              <span style="font-size:10px;color:var(--gray-400)">600</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;align-items:center">
+              <div style="width:100%;height:44px;background:var(--brand-700);border-radius:4px"></div>
+              <span style="font-size:10px;color:var(--gray-400)">700</span>
+            </div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Semantic colors</h2>
+        <div class="preview-box">
+          <div class="row">
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--success-50);display:flex;align-items:center;justify-content:center"><div style="width:12px;height:12px;border-radius:2px;background:var(--success-500)"></div></div><div><div style="font-size:12px;font-weight:500;color:var(--gray-700)">Success</div><div style="font-size:11px;color:var(--gray-400)">#3B6D11</div></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--danger-50);display:flex;align-items:center;justify-content:center"><div style="width:12px;height:12px;border-radius:2px;background:var(--danger-400)"></div></div><div><div style="font-size:12px;font-weight:500;color:var(--gray-700)">Danger</div><div style="font-size:11px;color:var(--gray-400)">#E24B4A</div></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--warning-50);display:flex;align-items:center;justify-content:center"><div style="width:12px;height:12px;border-radius:2px;background:var(--warning-400)"></div></div><div><div style="font-size:12px;font-weight:500;color:var(--gray-700)">Warning</div><div style="font-size:11px;color:var(--gray-400)">#EF9F27</div></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--info-50);display:flex;align-items:center;justify-content:center"><div style="width:12px;height:12px;border-radius:2px;background:var(--info-400)"></div></div><div><div style="font-size:12px;font-weight:500;color:var(--gray-700)">Info</div><div style="font-size:11px;color:var(--gray-400)">#378ADD</div></div></div>
+            </div>
+            <div style="flex:1">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="padding:10px 14px;background:var(--success-50);border-radius:var(--radius-md);font-size:13px;color:var(--success-500);font-weight:500">✓ Payment received — 3 invoices settled</div>
+                <div style="padding:10px 14px;background:var(--danger-50);border-radius:var(--radius-md);font-size:13px;color:var(--danger-600);font-weight:500">✕ Sync failed — connection timed out</div>
+                <div style="padding:10px 14px;background:var(--warning-50);border-radius:var(--radius-md);font-size:13px;color:var(--warning-600);font-weight:500">⚠ 3 invoices overdue by 30+ days</div>
+                <div style="padding:10px 14px;background:var(--info-50);border-radius:var(--radius-md);font-size:13px;color:var(--info-600);font-weight:500">ℹ Database maintenance scheduled</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SPACING ===== -->
+    <div class="section" id="section-spacing">
+      <div class="doc-hero">
+        <h1>Spacing & layout</h1>
+        <p>4px base unit. Consistent spacing creates rhythm and reduces cognitive load in dense data UIs.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Spacing scale</h2>
+        <div class="preview-box white">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px">
+              <span style="font-family:monospace;color:var(--gray-400);width:80px">4px  (1)</span>
+              <div style="height:12px;background:var(--brand-100);border-radius:2px;width:4px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px">
+              <span style="font-family:monospace;color:var(--gray-400);width:80px">8px  (2)</span>
+              <div style="height:12px;background:var(--brand-200);border-radius:2px;width:8px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px">
+              <span style="font-family:monospace;color:var(--gray-400);width:80px">12px (3)</span>
+              <div style="height:12px;background:var(--brand-400);border-radius:2px;width:12px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px">
+              <span style="font-family:monospace;color:var(--gray-400);width:80px">16px (4)</span>
+              <div style="height:12px;background:var(--brand-500);border-radius:2px;width:16px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px">
+              <span style="font-family:monospace;color:var(--gray-400);width:80px">20px (5)</span>
+              <div style="height:12px;background:var(--brand-500);border-radius:2px;width:20px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px">
+              <span style="font-family:monospace;color:var(--gray-400);width:80px">24px (6)</span>
+              <div style="height:12px;background:var(--brand-600);border-radius:2px;width:24px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px">
+              <span style="font-family:monospace;color:var(--gray-400);width:80px">32px (8)</span>
+              <div style="height:12px;background:var(--brand-600);border-radius:2px;width:32px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px">
+              <span style="font-family:monospace;color:var(--gray-400);width:80px">48px (12)</span>
+              <div style="height:12px;background:var(--brand-700);border-radius:2px;width:48px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BUTTONS ===== -->
+    <div class="section" id="section-buttons">
+      <div class="doc-hero">
+        <h1>Buttons</h1>
+        <p>One primary per view. Secondary for most actions. Ghost for icon-only toolbar controls. Danger only for destructive actions.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Variants</h2>
+        <div class="preview-box">
+          <div class="row" style="align-items:center">
+            <button class="btn btn-primary">Explore account</button>
+            <button class="btn btn-secondary">Import / Export</button>
+            <button class="btn btn-ghost">Filters</button>
+            <button class="btn btn-danger">Delete record</button>
+            <button class="btn btn-link" style="padding:0">View all →</button>
+          </div>
+        </div>
+        <div class="spacer-sm"></div>
+        <h2>Sizes</h2>
+        <div class="preview-box">
+          <div class="row" style="align-items:center">
+            <button class="btn btn-secondary btn-sm">Small</button>
+            <button class="btn btn-secondary">Medium</button>
+            <button class="btn btn-secondary btn-lg">Large</button>
+          </div>
+        </div>
+        <div class="spacer-sm"></div>
+        <h2>With icons</h2>
+        <div class="preview-box">
+          <div class="row" style="align-items:center">
+            <button class="btn btn-primary">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+              New task
+            </button>
+            <button class="btn btn-secondary">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+              Export
+            </button>
+            <button class="btn btn-ghost btn-icon" title="Settings">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 2v1M8 13v1M2 8h1M13 8h1M3.5 3.5l.7.7M11.8 11.8l.7.7M3.5 12.5l.7-.7M11.8 4.2l.7-.7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== INPUTS ===== -->
+    <div class="section" id="section-inputs">
+      <div class="doc-hero">
+        <h1>Inputs & forms</h1>
+        <p>36px default height. Brand focus ring. Error state with red border and helper text. Never disable — show the reason inline on use.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Text inputs</h2>
+        <div class="preview-box" style="max-width:500px">
+          <div class="col">
+            <div class="field-group">
+              <label class="field-label">Company name</label>
+              <input class="input" placeholder="Acme Corporation" />
+            </div>
+            <div class="field-group">
+              <label class="field-label">Search</label>
+              <div class="input-with-icon input-with-kbd">
+                <span class="input-icon">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l2.5 2.5"/></svg>
+                </span>
+                <input class="input" placeholder="Search suppliers, invoices..." />
+                <div class="input-kbd"><span class="kbd">⌘</span><span class="kbd">F</span></div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Invoice amount</label>
+              <input class="input error" value="not a number" />
+              <span class="field-error">Enter a valid currency amount (e.g. 1,240.00)</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Fiscal year</label>
+              <div class="select-wrap" style="width:100%">
+                <select>
+                  <option>2024 – 25</option>
+                  <option>2023 – 24</option>
+                  <option>2022 – 23</option>
+                </select>
+                <span class="select-caret">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Toggles</h2>
+        <div class="preview-box">
+          <div class="col">
+            <div class="toggle-wrap">
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+              <div><div class="toggle-label">Yearly view</div><div class="toggle-hint">Show data aggregated by fiscal year</div></div>
+            </div>
+            <div class="toggle-wrap">
+              <button class="toggle" onclick="this.classList.toggle('on')"></button>
+              <div><div class="toggle-label">Email notifications</div><div class="toggle-hint">Daily digest of pending approvals</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BADGES ===== -->
+    <div class="section" id="section-badges">
+      <div class="doc-hero">
+        <h1>Badges & tags</h1>
+        <p>11px / 500. Lightweight status indicators. Dot variant for compact contexts. Never use color alone — always pair with a label.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Badge variants</h2>
+        <div class="preview-box">
+          <div class="row" style="align-items:center;flex-wrap:wrap">
+            <span class="badge badge-default">Default</span>
+            <span class="badge badge-brand">Brand</span>
+            <span class="badge badge-success">Active</span>
+            <span class="badge badge-danger">Overdue</span>
+            <span class="badge badge-warning">Pending</span>
+            <span class="badge badge-info">Draft</span>
+          </div>
+          <div class="divider"></div>
+          <div class="row" style="align-items:center;flex-wrap:wrap">
+            <span class="badge badge-dot badge-success">Online</span>
+            <span class="badge badge-dot badge-danger">Disconnected</span>
+            <span class="badge badge-dot badge-warning">Syncing</span>
+            <span class="badge badge-dot badge-default">Archived</span>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>In context — table cell</h2>
+        <div class="preview-box white">
+          <table class="ds-table">
+            <thead><tr><th>Invoice</th><th>Amount</th><th>Due date</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>INV-0042</td><td style="font-family:monospace">$4,200.00</td><td>Jun 30, 2026</td><td><span class="badge badge-success">Paid</span></td></tr>
+              <tr><td>INV-0041</td><td style="font-family:monospace">$1,850.00</td><td>Jun 15, 2026</td><td><span class="badge badge-danger">Overdue</span></td></tr>
+              <tr><td>INV-0040</td><td style="font-family:monospace">$9,600.00</td><td>Jul 10, 2026</td><td><span class="badge badge-warning">Pending</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CARDS ===== -->
+    <div class="section" id="section-cards">
+      <div class="doc-hero">
+        <h1>Cards & stat cards</h1>
+        <p>White surface on gray canvas. Subtle border, no shadow by default. Stat cards pair a metric with a delta and an icon container.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Stat cards — project overview</h2>
+        <div class="preview-box">
+          <div class="grid-4" style="gap:12px">
+            <div class="stat-card">
+              <div class="stat-card-left">
+                <div class="stat-label">Total items</div>
+                <div class="stat-value">458</div>
+                <div class="stat-delta up">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 13V3M3 8l5-5 5 5"/></svg>
+                  +7%
+                  <span class="stat-delta-label">this year</span>
+                </div>
+              </div>
+              <div class="stat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brand-500)" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-left">
+                <div class="stat-label">Total suppliers</div>
+                <div class="stat-value">60</div>
+                <div class="stat-delta up">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 13V3M3 8l5-5 5 5"/></svg>
+                  +7%
+                  <span class="stat-delta-label">this year</span>
+                </div>
+              </div>
+              <div class="stat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brand-500)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-left">
+                <div class="stat-label">Sales invoices</div>
+                <div class="stat-value">240</div>
+                <div class="stat-delta down">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8l5 5 5-5"/></svg>
+                  -3%
+                  <span class="stat-delta-label">this year</span>
+                </div>
+              </div>
+              <div class="stat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brand-500)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-left">
+                <div class="stat-label">Total leads</div>
+                <div class="stat-value">158</div>
+                <div class="stat-delta up">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 13V3M3 8l5-5 5 5"/></svg>
+                  +7%
+                  <span class="stat-delta-label">this year</span>
+                </div>
+              </div>
+              <div class="stat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brand-500)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Generic card</h2>
+        <div class="preview-box">
+          <div class="grid-2" style="gap:12px">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Accounting</div>
+                </div>
+                <button class="btn btn-ghost btn-icon btn-sm">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="3" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="8" cy="13" r="1"/></svg>
+                </button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:1px">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+                  <span style="font-size:13px;color:var(--gray-600)">Payables</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
+                  <span style="font-size:13px;color:var(--gray-600)">Receivables</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">CRM</div>
+                <button class="btn btn-ghost btn-icon btn-sm">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="3" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="8" cy="13" r="1"/></svg>
+                </button>
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+                  <span style="font-size:13px;color:var(--gray-600)">Leads management</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
+                  <span style="font-size:13px;color:var(--gray-600)">Customer profiles</span>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NAVIGATION ===== -->
+    <div class="section" id="section-navigation">
+      <div class="doc-hero">
+        <h1>Navigation</h1>
+        <p>Sidebar + topbar shell. Sidebar groups nav items under section labels. Topbar carries breadcrumb, search, and quick actions.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Sidebar</h2>
+        <div class="preview-box">
+          <div class="sidebar-demo">
+            <div class="sidebar-top">
+              <div class="sidebar-logo-box">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+              </div>
+              <div><div class="sidebar-logo-name">ERP Software</div><div class="sidebar-logo-ver">v1.0.1</div></div>
+            </div>
+            <div class="sb-group">
+              <div class="sb-label">Business</div>
+              <div class="sb-item active">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6l5-4 5 4v7a1 1 0 01-1 1H4a1 1 0 01-1-1V6z"/></svg>
+                Home
+              </div>
+              <div class="sb-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6M5 10h4"/></svg>
+                Accounting
+              </div>
+              <div class="sb-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M8 4v8"/></svg>
+                Buying
+              </div>
+              <div class="sb-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2H6L4 6l4 1 4-1-2-4z"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+                Selling
+              </div>
+            </div>
+            <div class="sb-group">
+              <div class="sb-label">Management</div>
+              <div class="sb-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 13v-1a4 4 0 00-4-4H4a4 4 0 00-4 4v1"/><circle cx="6" cy="5" r="3"/><path d="M16 13v-1a4 4 0 00-3-3.87"/><path d="M10 2a3 3 0 010 5.83"/></svg>
+                CRM
+              </div>
+              <div class="sb-item">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+                Support
+              </div>
+            </div>
+            <div class="sidebar-foot">
+              <div class="avatar-status">
+                <div class="avatar avatar-sm">WN</div>
+                <div class="status-dot online"></div>
+              </div>
+              <div>
+                <div class="foot-name">Wrath Neon</div>
+                <div class="foot-email">johns@gmail.com</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Topbar</h2>
+        <div class="preview-box" style="padding:16px">
+          <div class="topbar-demo">
+            <div class="topbar-breadcrumb">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+              <span>Dashboard</span>
+              <span class="bc-sep">›</span>
+              <span class="bc-current">Home</span>
+            </div>
+            <div class="topbar-search">
+              <span class="ts-icon">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l2.5 2.5"/></svg>
+              </span>
+              <input placeholder="Search" />
+              <div class="topbar-kbd"><span class="kbd">⌘</span><span class="kbd">F</span></div>
+            </div>
+            <div class="topbar-actions">
+              <button class="topbar-new-task">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M8 3v10M3 8h10"/></svg>
+                New task
+              </button>
+              <div class="tb-action">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M8 5v3l2 2"/></svg>
+              </div>
+              <div class="tb-action">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="7" r="4"/><path d="M3 13.5c0-2.2 2.2-4 5-4s5 1.8 5 4"/></svg>
+              </div>
+              <div class="tb-action" style="position:relative">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 014 4c0 3 1 4 2 4H2c1 0 2-1 2-4a4 4 0 014-4zM6.5 13a1.5 1.5 0 003 0"/></svg>
+                <div class="tb-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TABLES ===== -->
+    <div class="section" id="section-tables">
+      <div class="doc-hero">
+        <h1>Tables</h1>
+        <p>Dense, scannable data tables. 11px uppercase headers, 13px body cells. Row hover for context. Zebra stripe only for 10+ columns.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Standard table</h2>
+        <div class="preview-box white" style="padding:0;overflow:hidden">
+          <table class="ds-table">
+            <thead>
+              <tr>
+                <th>Supplier</th><th>Category</th><th>Outstanding</th><th>Last order</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Apex Manufacturing</td>
+                <td><span style="font-size:12px;color:var(--gray-500)">Raw materials</span></td>
+                <td><span style="font-family:monospace;font-size:13px">$12,400</span></td>
+                <td><span style="font-size:12px;color:var(--gray-400)">Jun 12, 2026</span></td>
+                <td><span class="badge badge-success">Active</span></td>
+              </tr>
+              <tr>
+                <td>Vertex Logistics</td>
+                <td><span style="font-size:12px;color:var(--gray-500)">Shipping</span></td>
+                <td><span style="font-family:monospace;font-size:13px">$3,850</span></td>
+                <td><span style="font-size:12px;color:var(--gray-400)">Jun 20, 2026</span></td>
+                <td><span class="badge badge-warning">On hold</span></td>
+              </tr>
+              <tr>
+                <td>NovaTech Parts</td>
+                <td><span style="font-size:12px;color:var(--gray-500)">Electronics</span></td>
+                <td><span style="font-family:monospace;font-size:13px">$28,000</span></td>
+                <td><span style="font-size:12px;color:var(--gray-400)">May 30, 2026</span></td>
+                <td><span class="badge badge-danger">Suspended</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FEEDBACK ===== -->
+    <div class="section" id="section-feedback">
+      <div class="doc-hero">
+        <h1>Feedback & alerts</h1>
+        <p>Toasts for transient confirmation. Inline banners for persistent states. Empty states as invitations, not apologies.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Toast notifications</h2>
+        <div class="preview-box">
+          <div class="col">
+            <div class="toast toast-success">
+              <span class="toast-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M5 8l2 2 4-4"/></svg></span>
+              <div><div class="toast-title">Payment recorded</div><div class="toast-body">INV-0042 marked as settled.</div></div>
+              <span class="toast-close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>
+            </div>
+            <div class="toast toast-danger">
+              <span class="toast-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v4M8 11v.5"/></svg></span>
+              <div><div class="toast-title">Sync failed</div><div class="toast-body">Connection timed out. Check your network and retry.</div></div>
+              <span class="toast-close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>
+            </div>
+            <div class="toast toast-warning">
+              <span class="toast-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2L2 14h12L8 2z"/><path d="M8 7v3M8 12v.5"/></svg></span>
+              <div><div class="toast-title">3 invoices overdue</div><div class="toast-body">Review items 30+ days past due.</div></div>
+              <span class="toast-close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg></span>
+            </div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Empty state</h2>
+        <div class="preview-box white">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </div>
+            <div class="empty-title">No invoices yet</div>
+            <div class="empty-body">Create your first invoice to start tracking payments and outstanding balances.</div>
+            <button class="btn btn-primary">Create invoice</button>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Skeleton loading</h2>
+        <div class="preview-box white">
+          <div class="col">
+            <div class="skeleton" style="height:14px;width:40%"></div>
+            <div class="skeleton" style="height:10px;width:65%"></div>
+            <div class="skeleton" style="height:10px;width:55%"></div>
+            <div style="display:flex;gap:12px;margin-top:8px">
+              <div class="skeleton" style="height:60px;flex:1;border-radius:var(--radius-lg)"></div>
+              <div class="skeleton" style="height:60px;flex:1;border-radius:var(--radius-lg)"></div>
+              <div class="skeleton" style="height:60px;flex:1;border-radius:var(--radius-lg)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== AVATARS ===== -->
+    <div class="section" id="section-avatars">
+      <div class="doc-hero">
+        <h1>Avatars</h1>
+        <p>Initials-based fallback with brand violet tint. Status dot indicates presence. Stacked for team display.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Sizes</h2>
+        <div class="preview-box">
+          <div class="row" style="align-items:center">
+            <div class="avatar avatar-xs">WN</div>
+            <div class="avatar avatar-sm">WN</div>
+            <div class="avatar avatar-md">WN</div>
+            <div class="avatar avatar-lg">WN</div>
+            <div class="avatar avatar-xl">WN</div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>With status</h2>
+        <div class="preview-box">
+          <div class="row" style="align-items:center">
+            <div class="avatar-status"><div class="avatar avatar-md">WN</div><div class="status-dot online"></div></div>
+            <div class="avatar-status"><div class="avatar avatar-md" style="background:var(--success-50);color:var(--success-500)">AK</div><div class="status-dot busy"></div></div>
+            <div class="avatar-status"><div class="avatar avatar-md" style="background:var(--warning-50);color:var(--warning-600)">JD</div><div class="status-dot offline"></div></div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Stacked group</h2>
+        <div class="preview-box">
+          <div style="display:flex">
+            <div class="avatar avatar-md" style="border:2px solid white;margin-right:-8px;z-index:4">WN</div>
+            <div class="avatar avatar-md" style="background:var(--success-50);color:var(--success-500);border:2px solid white;margin-right:-8px;z-index:3">AK</div>
+            <div class="avatar avatar-md" style="background:var(--warning-50);color:var(--warning-600);border:2px solid white;margin-right:-8px;z-index:2">JD</div>
+            <div class="avatar avatar-md" style="background:var(--gray-100);color:var(--gray-500);border:2px solid white;z-index:1;font-size:11px">+4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DATA VIZ ===== -->
+    <div class="section" id="section-dataviz">
+      <div class="doc-hero">
+        <h1>Data visualization</h1>
+        <p>Charts built with Recharts. Always include a legend. Mini sparklines for stat context. Progress bars and rings for progress tracking.</p>
+      </div>
+      <div class="doc-section">
+        <h2>Mini bar chart (sparkline)</h2>
+        <div class="preview-box white">
+          <div class="row" style="gap:24px">
+            <div class="stat-card" style="flex:1">
+              <div class="stat-card-left">
+                <div class="stat-label">Income</div>
+                <div class="stat-value">$72K</div>
+                <div class="stat-delta up"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 13V3M3 8l5-5 5 5"/></svg> +7% <span class="stat-delta-label">vs last year</span></div>
+              </div>
+              <div>
+                <div class="mini-bars">
+                  <div class="mini-bar" style="height:40%;background:var(--brand-100)"></div>
+                  <div class="mini-bar" style="height:60%;background:var(--brand-100)"></div>
+                  <div class="mini-bar" style="height:50%;background:var(--brand-100)"></div>
+                  <div class="mini-bar" style="height:70%;background:var(--brand-400)"></div>
+                  <div class="mini-bar" style="height:55%;background:var(--brand-100)"></div>
+                  <div class="mini-bar" style="height:80%;background:var(--brand-500)"></div>
+                  <div class="mini-bar" style="height:65%;background:var(--brand-100)"></div>
+                  <div class="mini-bar" style="height:90%;background:var(--brand-600)"></div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-card" style="flex:1">
+              <div class="stat-card-left">
+                <div class="stat-label">Expense</div>
+                <div class="stat-value">$72K</div>
+                <div class="stat-delta down"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8l5 5 5-5"/></svg> -3% <span class="stat-delta-label">vs last year</span></div>
+              </div>
+              <div>
+                <div class="mini-bars">
+                  <div class="mini-bar" style="height:70%;background:#FCC;"></div>
+                  <div class="mini-bar" style="height:50%;background:#FCC;"></div>
+                  <div class="mini-bar" style="height:85%;background:var(--danger-400)"></div>
+                  <div class="mini-bar" style="height:60%;background:#FCC;"></div>
+                  <div class="mini-bar" style="height:45%;background:#FCC;"></div>
+                  <div class="mini-bar" style="height:70%;background:#FCC;"></div>
+                  <div class="mini-bar" style="height:55%;background:#FCC;"></div>
+                  <div class="mini-bar" style="height:40%;background:#FCC;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Progress bars</h2>
+        <div class="preview-box white">
+          <div class="col">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:var(--gray-500)"><span>Revenue target</span><span style="font-weight:500">68%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:68%;background:var(--brand-500)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:var(--gray-500)"><span>Invoices cleared</span><span style="font-weight:500;color:var(--success-500)">91%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:91%;background:var(--success-500)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:var(--gray-500)"><span>Supplier onboarding</span><span style="font-weight:500;color:var(--warning-400)">34%</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:34%;background:var(--warning-400)"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <h2>Chart legend</h2>
+        <div class="preview-box">
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#EC4899"></div>Income</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gray-200)"></div>Expense</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--brand-500)"></div>Net profit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PATTERNS ===== -->
+    <div class="section" id="section-patterns">
+      <div class="doc-hero">
+        <h1>UI patterns</h1>
+        <p>Recurring solutions to recurring problems. Each pattern documents the behavior, not just the look.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>Pattern 1 — Delta indicator</h2>
+        <p class="doc-section-sub">Always pair icon + color + numeric value + context label. Never color alone.</p>
+        <div class="preview-box white">
+          <div class="row">
+            <div class="delta-row up"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 13V3M3 8l5-5 5 5"/></svg> +7% <span class="delta-label">this year</span></div>
+            <div class="delta-row down"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3v10M3 8l5 5 5-5"/></svg> -3% <span class="delta-label">vs last month</span></div>
+            <div class="delta-row" style="color:var(--gray-400)">— <span class="delta-label" style="margin-left:4px">no change</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>Pattern 2 — Report & masters card</h2>
+        <p class="doc-section-sub">Category card listing sub-reports as navigable rows. Overflow menu top-right. Each row links to a full report view.</p>
+        <div class="preview-box">
+          <div class="grid-3" style="gap:12px">
+            <div class="card card-sm">
+              <div class="card-header" style="margin-bottom:8px">
+                <span class="card-title">Stock</span>
+                <button class="btn btn-ghost btn-icon btn-sm"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="3" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="8" cy="13" r="1"/></svg></button>
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--gray-600)">Stock overview <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;font-size:13px;color:var(--gray-600)">Product categories <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg></div>
+              </div>
+            </div>
+            <div class="card card-sm">
+              <div class="card-header" style="margin-bottom:8px">
+                <span class="card-title">Accounting</span>
+                <button class="btn btn-ghost btn-icon btn-sm"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="3" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="8" cy="13" r="1"/></svg></button>
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--gray-600)">Payables <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;font-size:13px;color:var(--gray-600)">Receivables <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg></div>
+              </div>
+            </div>
+            <div class="card card-sm">
+              <div class="card-header" style="margin-bottom:8px">
+                <span class="card-title">CRM</span>
+                <button class="btn btn-ghost btn-icon btn-sm"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="3" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="8" cy="13" r="1"/></svg></button>
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--gray-600)">Leads management <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;font-size:13px;color:var(--gray-600)">Customer profiles <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--gray-300)" stroke-width="1.8"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>Pattern 3 — Pagination nav for carousels</h2>
+        <p class="doc-section-sub">Left / right chevron pair. Disabled state on boundary. Used in project overview card rows.</p>
+        <div class="preview-box">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:14px;font-weight:500;color:var(--gray-700)">Explore project overview</div>
+            <div class="row" style="gap:6px">
+              <button class="btn btn-secondary btn-icon btn-sm" disabled style="opacity:0.4">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 4L6 8l4 4"/></svg>
+              </button>
+              <button class="btn btn-secondary btn-icon btn-sm">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4l4 4-4 4"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>Pattern 4 — Filter bar</h2>
+        <p class="doc-section-sub">Segment control for granularity (Yearly / Monthly / Weekly) plus a filters dropdown. Right-aligned on chart header.</p>
+        <div class="preview-box">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;border:1px solid var(--border-strong);border-radius:var(--radius-md);overflow:hidden">
+              <button style="padding:6px 12px;font-size:12px;font-weight:500;background:var(--brand-50);color:var(--brand-600);border:none;cursor:pointer;font-family:var(--font)">Yearly</button>
+              <button style="padding:6px 12px;font-size:12px;color:var(--gray-500);border:none;cursor:pointer;font-family:var(--font);background:none;border-left:1px solid var(--border-strong)">Monthly</button>
+              <button style="padding:6px 12px;font-size:12px;color:var(--gray-500);border:none;cursor:pointer;font-family:var(--font);background:none;border-left:1px solid var(--border-strong)">Weekly</button>
+            </div>
+            <button class="btn btn-secondary btn-sm">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M5 8h6M8 12h0"/></svg>
+              Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>Pattern 5 — "Show more" row action</h2>
+        <p class="doc-section-sub">Bottom of stat cards. Inline arrow, no button chrome. Navigates to the full list view.</p>
+        <div class="preview-box white">
+          <div style="max-width:240px">
+            <div class="stat-card">
+              <div class="stat-card-left">
+                <div class="stat-label">Total leads</div>
+                <div class="stat-value">158</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:12px">
+                  <div class="stat-delta up"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 13V3M3 8l5-5 5 5"/></svg> +7% <span class="stat-delta-label">this year</span></div>
+                  <a href="#" style="font-size:12px;font-weight:500;color:var(--gray-700);display:flex;align-items:center;gap:3px">
+                    Show more
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+                  </a>
+                </div>
+              </div>
+              <div class="stat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brand-500)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.ds-nav-item').forEach(i => i.classList.remove('active'));
+  const sec = document.getElementById('section-' + id);
+  if (sec) sec.classList.add('visible');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
