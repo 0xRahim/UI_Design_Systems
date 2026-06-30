@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ERP Dashboard — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ======================================================
+     DESIGN TOKENS — sampled & systematized from reference UI
+     ====================================================== */
+  :root{
+    /* ---- Neutrals ---- */
+    --bg-page:        #EEEEF1;
+    --bg-surface:     #FFFFFF;
+    --bg-surface-2:   #F6F6F8;
+    --bg-surface-3:   #F0F0F3;
+    --border-subtle:  #E9E9ED;
+    --border-default: #E2E2E7;
+    --border-strong:  #D2D2D9;
+
+    --text-primary:   #0B0B0E;
+    --text-secondary: #6E6E78;
+    --text-tertiary:  #9C9CA6;
+    --text-inverse:   #FFFFFF;
+
+    /* ---- Brand / data accents ---- */
+    --pink-50:   #FEF1F5;
+    --pink-100:  #FCE0EA;
+    --pink-300:  #F593B5;
+    --pink-500:  #EE3D72;
+    --pink-600:  #D72A5E;
+
+    --indigo-50:  #EEEEFE;
+    --indigo-100: #E1E1FC;
+    --indigo-300: #A7A7F5;
+    --indigo-500: #6366F1;
+    --indigo-600: #4F50D6;
+
+    --blue-50:  #EBF3FE;
+    --blue-100: #DCEAFE;
+    --blue-300: #8FBBFB;
+    --blue-500: #3B82F6;
+    --blue-600: #2667D8;
+
+    --green-50:  #E9FBF1;
+    --green-100: #DAF8E6;
+    --green-300: #7CDDA4;
+    --green-500: #18B463;
+    --green-600: #129650;
+
+    --black:       #0A0A0C;
+    --black-hover: #232328;
+
+    /* ---- Radius ---- */
+    --r-xs:   6px;
+    --r-sm:   8px;
+    --r-md:   12px;
+    --r-lg:   16px;
+    --r-xl:   20px;
+    --r-2xl:  24px;
+    --r-full: 999px;
+
+    /* ---- Spacing (4px base) ---- */
+    --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+    --sp-5: 20px; --sp-6: 24px; --sp-7: 28px; --sp-8: 32px;
+    --sp-10: 40px; --sp-12: 48px; --sp-16: 64px; --sp-20: 80px;
+
+    /* ---- Typography ---- */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    --fs-2xs: 11px; --fs-xs: 12px; --fs-sm: 13px; --fs-base: 14px;
+    --fs-md: 15px;  --fs-lg: 16px; --fs-xl: 18px; --fs-2xl: 22px;
+    --fs-3xl: 26px; --fs-4xl: 30px; --fs-5xl: 34px;
+
+    /* ---- Elevation ---- */
+    --shadow-xs: 0 1px 2px rgba(15,15,20,0.045);
+    --shadow-sm: 0 2px 8px rgba(15,15,20,0.06);
+    --shadow-md: 0 10px 28px rgba(15,15,20,0.10);
+    --shadow-popover: 0 14px 36px rgba(15,15,20,0.14);
+
+    /* ---- Motion ---- */
+    --ease: cubic-bezier(.4,0,.2,1);
+    --t-fast: 120ms var(--ease);
+    --t-base: 180ms var(--ease);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0; background:var(--bg-page); color:var(--text-primary);
+    font-family:var(--font-sans); font-size:var(--fs-base); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,p,ul{ margin:0; }
+  ::selection{ background:var(--pink-100); color:var(--pink-600); }
+
+  /* ===== Shell layout ===== */
+  .shell{ display:flex; max-width:1480px; margin:0 auto; }
+  .ds-nav{
+    width:248px; flex-shrink:0; position:sticky; top:0; height:100vh;
+    overflow-y:auto; padding:var(--sp-6) var(--sp-4); border-right:1px solid var(--border-subtle);
+    background:var(--bg-surface);
+  }
+  .ds-nav::-webkit-scrollbar{ width:6px; }
+  .ds-nav::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:var(--r-full); }
+
+  .brand{ display:flex; align-items:center; gap:var(--sp-3); padding:0 var(--sp-2) var(--sp-5); }
+  .brand-mark{
+    width:34px; height:34px; border-radius:var(--r-sm); background:var(--black);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .brand-mark svg{ width:18px; height:18px; }
+  .brand-name{ font-size:var(--fs-sm); font-weight:700; color:var(--text-primary); line-height:1.2; }
+  .brand-sub{ font-size:var(--fs-2xs); color:var(--text-tertiary); }
+
+  .nav-group-label{
+    font-size:var(--fs-2xs); font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--text-tertiary); padding:var(--sp-5) var(--sp-3) var(--sp-2);
+  }
+  .nav-link{
+    display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-2) var(--sp-3);
+    border-radius:var(--r-sm); font-size:var(--fs-sm); font-weight:500; color:var(--text-secondary);
+    text-decoration:none; transition:background var(--t-fast), color var(--t-fast);
+  }
+  .nav-link:hover{ background:var(--bg-surface-2); color:var(--text-primary); }
+  .nav-link.active{ background:var(--bg-surface-3); color:var(--text-primary); font-weight:600; }
+  .nav-link svg{ width:15px; height:15px; flex-shrink:0; opacity:.8; }
+
+  .ds-main{ flex:1; min-width:0; padding:var(--sp-10) var(--sp-12) var(--sp-20); }
+  section{ scroll-margin-top:var(--sp-8); margin-bottom:var(--sp-16); }
+  .section-head{ margin-bottom:var(--sp-6); }
+  .section-eyebrow{ font-size:var(--fs-xs); font-weight:600; color:var(--pink-500); text-transform:uppercase; letter-spacing:.06em; margin-bottom:var(--sp-2); }
+  .section-title{ font-size:var(--fs-3xl); font-weight:700; letter-spacing:-0.01em; margin-bottom:var(--sp-2); }
+  .section-desc{ font-size:var(--fs-md); color:var(--text-secondary); max-width:660px; line-height:1.6; }
+
+  .card{ background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--r-xl); }
+  .pad{ padding:var(--sp-6); }
+  .grid{ display:grid; gap:var(--sp-4); }
+  .grid-2{ grid-template-columns:repeat(2,1fr); }
+  .grid-3{ grid-template-columns:repeat(3,1fr); }
+  .grid-4{ grid-template-columns:repeat(4,1fr); }
+  .grid-5{ grid-template-columns:repeat(5,1fr); }
+  @media (max-width:1100px){ .grid-4{grid-template-columns:repeat(2,1fr);} .grid-5{grid-template-columns:repeat(3,1fr);} .grid-3{grid-template-columns:repeat(2,1fr);} }
+
+  code, .token-name{ font-family:var(--font-mono); font-size:12px; }
+
+  /* ===== Hero ===== */
+  .hero{ margin-bottom:var(--sp-16); }
+  .hero-kicker{ display:inline-flex; align-items:center; gap:var(--sp-2); background:var(--bg-surface-3); border:1px solid var(--border-default); padding:6px 12px; border-radius:var(--r-full); font-size:var(--fs-xs); font-weight:600; color:var(--text-secondary); margin-bottom:var(--sp-5); }
+  .hero-kicker .dot{ width:6px; height:6px; border-radius:50%; background:var(--green-500); }
+  .hero h1{ font-size:48px; font-weight:800; letter-spacing:-0.02em; line-height:1.05; max-width:780px; }
+  .hero h1 span{ color:var(--pink-500); }
+  .hero p{ margin-top:var(--sp-5); font-size:var(--fs-lg); color:var(--text-secondary); max-width:600px; line-height:1.6; }
+  .hero-meta{ display:flex; gap:var(--sp-8); margin-top:var(--sp-8); flex-wrap:wrap; }
+  .hero-meta-item .num{ font-size:var(--fs-2xl); font-weight:700; }
+  .hero-meta-item .label{ font-size:var(--fs-xs); color:var(--text-tertiary); margin-top:2px; }
+
+  /* ===== Color swatches ===== */
+  .swatch{ border:1px solid var(--border-subtle); border-radius:var(--r-lg); overflow:hidden; background:var(--bg-surface); }
+  .swatch-fill{ height:64px; }
+  .swatch-body{ padding:var(--sp-3) var(--sp-4) var(--sp-4); }
+  .swatch-name{ font-size:var(--fs-sm); font-weight:600; margin-bottom:2px; }
+  .swatch-hex{ font-family:var(--font-mono); font-size:11px; color:var(--text-tertiary); display:block; margin-bottom:6px; }
+  .swatch-use{ font-size:11px; color:var(--text-secondary); line-height:1.5; }
+
+  /* ===== Type specimens ===== */
+  .specimen{ display:flex; align-items:baseline; gap:var(--sp-6); padding:var(--sp-4) 0; border-bottom:1px solid var(--border-subtle); }
+  .specimen:last-child{ border-bottom:none; }
+  .specimen-meta{ width:170px; flex-shrink:0; }
+  .specimen-meta .tname{ font-size:var(--fs-sm); font-weight:600; }
+  .specimen-meta .tval{ font-family:var(--font-mono); font-size:11px; color:var(--text-tertiary); margin-top:2px; }
+  .specimen-sample{ color:var(--text-primary); }
+
+  /* ===== Spacing scale ===== */
+  .space-row{ display:flex; align-items:center; gap:var(--sp-4); padding:10px 0; border-bottom:1px solid var(--border-subtle); }
+  .space-row:last-child{ border-bottom:none; }
+  .space-bar{ background:var(--pink-500); border-radius:3px; height:10px; }
+  .space-label{ width:90px; font-family:var(--font-mono); font-size:12px; color:var(--text-secondary); flex-shrink:0; }
+  .space-px{ font-family:var(--font-mono); font-size:12px; color:var(--text-tertiary); }
+
+  /* ===== Radius & elevation ===== */
+  .radius-demo{ width:100%; height:88px; background:var(--bg-surface-3); border:1px solid var(--border-default); display:flex; align-items:center; justify-content:center; }
+  .elevation-demo{ width:100%; height:88px; background:var(--bg-surface); border-radius:var(--r-lg); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--text-tertiary); }
+
+  /* ===== Buttons ===== */
+  .row{ display:flex; align-items:center; gap:var(--sp-3); flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--font-sans); font-weight:600; border:none; cursor:pointer;
+    transition:all var(--t-fast); white-space:nowrap;
+  }
+  .btn svg{ width:15px; height:15px; }
+  .btn-md{ height:40px; padding:0 18px; font-size:var(--fs-sm); border-radius:var(--r-md); }
+  .btn-sm{ height:34px; padding:0 14px; font-size:var(--fs-xs); border-radius:var(--r-sm); }
+  .btn-lg{ height:46px; padding:0 22px; font-size:var(--fs-md); border-radius:var(--r-md); }
+  .btn-primary{ background:var(--black); color:var(--text-inverse); }
+  .btn-primary:hover{ background:var(--black-hover); }
+  .btn-outline{ background:var(--bg-surface); color:var(--text-primary); border:1px solid var(--border-default); }
+  .btn-outline:hover{ border-color:var(--border-strong); background:var(--bg-surface-2); }
+  .btn-ghost{ background:var(--bg-surface-3); color:var(--text-primary); }
+  .btn-ghost:hover{ background:var(--border-default); }
+  .btn-pill{ border-radius:var(--r-full); }
+  .btn-icon{ width:40px; height:40px; padding:0; border-radius:var(--r-md); background:var(--bg-surface-3); color:var(--text-secondary); }
+  .btn-icon:hover{ background:var(--border-default); color:var(--text-primary); }
+  .btn-disabled{ opacity:.4; cursor:not-allowed; }
+  .kbd{ font-family:var(--font-mono); font-size:11px; background:var(--bg-surface-3); border:1px solid var(--border-default); border-radius:5px; padding:2px 6px; color:var(--text-tertiary); }
+
+  /* ===== Form controls ===== */
+  .search-field{
+    display:flex; align-items:center; gap:8px; height:40px; padding:0 14px;
+    background:var(--bg-surface-3); border-radius:var(--r-full); width:260px;
+    color:var(--text-tertiary); font-size:var(--fs-sm);
+  }
+  .search-field svg{ width:15px; height:15px; flex-shrink:0; }
+  .search-field span{ flex:1; }
+
+  .input-field{
+    height:42px; padding:0 14px; border:1px solid var(--border-default); border-radius:var(--r-md);
+    background:var(--bg-surface); font-size:var(--fs-sm); color:var(--text-primary); width:240px;
+    display:flex; align-items:center;
+  }
+  .input-field.focused{ border-color:var(--indigo-500); box-shadow:0 0 0 3px var(--indigo-100); }
+
+  .checkbox-row{ display:flex; align-items:center; gap:8px; font-size:var(--fs-sm); color:var(--text-secondary); }
+  .chk{ width:16px; height:16px; border-radius:4px; border:1.5px solid var(--border-strong); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .chk.on{ background:var(--pink-500); border-color:var(--pink-500); }
+  .chk.on-indigo{ background:var(--indigo-500); border-color:var(--indigo-500); }
+  .chk.on-green{ background:var(--green-500); border-color:var(--green-500); }
+  .chk svg{ width:10px; height:10px; stroke:white; }
+
+  .segment{ display:inline-flex; background:var(--bg-surface-3); border-radius:var(--r-full); padding:3px; gap:2px; }
+  .segment button{ border:none; background:transparent; width:38px; height:30px; border-radius:var(--r-full); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-tertiary); }
+  .segment button.active{ background:var(--bg-surface); color:var(--text-primary); box-shadow:var(--shadow-xs); }
+  .segment svg{ width:15px; height:15px; }
+
+  .select-pill{ display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px; border:1px solid var(--border-default); border-radius:var(--r-full); font-size:var(--fs-sm); font-weight:500; background:var(--bg-surface); color:var(--text-primary); }
+  .select-pill svg{ width:14px; height:14px; color:var(--text-tertiary); }
+
+  /* ===== Badges / chips ===== */
+  .badge{ display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; padding:4px 9px; border-radius:var(--r-full); }
+  .badge-positive{ background:var(--green-100); color:var(--green-600); }
+  .badge-negative{ background:var(--pink-100); color:var(--pink-600); }
+  .badge-neutral{ background:var(--bg-surface-3); color:var(--text-secondary); }
+  .badge-count{ background:var(--bg-surface-3); color:var(--text-primary); font-weight:700; padding:4px 8px; }
+  .badge svg{ width:11px; height:11px; }
+
+  .dot-indicator{ width:9px; height:9px; border-radius:50%; background:var(--pink-500); border:2px solid var(--bg-surface); }
+  .status-dot{ width:9px; height:9px; border-radius:50%; background:var(--green-500); border:2px solid var(--bg-surface); }
+
+  /* ===== Avatars / icon tiles ===== */
+  .avatar{ width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--indigo-300),var(--pink-300)); position:relative; flex-shrink:0; }
+  .avatar .status-dot{ position:absolute; bottom:-1px; right:-1px; }
+  .icon-tile{ width:42px; height:42px; border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .icon-tile svg{ width:20px; height:20px; color:white; }
+  .tile-indigo{ background:var(--indigo-500); }
+  .tile-pink{ background:var(--pink-500); }
+  .tile-blue{ background:var(--blue-500); }
+  .tile-green{ background:var(--green-500); }
+  .tile-black{ background:var(--black); }
+
+  /* ===== Sidebar nav demo (component) ===== */
+  .demo-sidebar{ width:230px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--r-xl); padding:var(--sp-5) var(--sp-3); }
+  .demo-item{ display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r-sm); font-size:var(--fs-sm); color:var(--text-secondary); font-weight:500; cursor:pointer; }
+  .demo-item.active{ background:var(--bg-surface-3); color:var(--text-primary); font-weight:600; }
+  .demo-item svg{ width:16px; height:16px; opacity:.85; }
+  .demo-label{ font-size:10.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--text-tertiary); padding:14px 10px 6px; }
+
+  /* ===== Breadcrumb ===== */
+  .breadcrumb{ display:flex; align-items:center; gap:8px; font-size:var(--fs-sm); color:var(--text-tertiary); }
+  .breadcrumb b{ color:var(--text-primary); font-weight:600; }
+  .breadcrumb svg{ width:13px; height:13px; }
+
+  /* ===== Tooltip ===== */
+  .tooltip{ background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--r-md); padding:10px 14px; box-shadow:var(--shadow-popover); display:inline-block; }
+  .tooltip .tt-val{ font-weight:700; font-size:var(--fs-md); }
+  .tooltip .tt-sub{ font-size:11px; color:var(--text-tertiary); margin-top:2px; }
+
+  /* ===== Stat / metric card components ===== */
+  .stat-card{ background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--r-xl); padding:var(--sp-5); }
+  .stat-top{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:var(--sp-4); }
+  .stat-label{ font-size:var(--fs-sm); color:var(--text-secondary); }
+  .stat-number{ font-size:var(--fs-4xl); font-weight:700; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; margin-bottom:var(--sp-4); }
+  .stat-footer{ display:flex; align-items:center; justify-content:space-between; padding-top:var(--sp-4); border-top:1px solid var(--border-subtle); }
+  .stat-footer-left{ display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text-tertiary); }
+  .show-more{ display:flex; align-items:center; gap:4px; font-size:var(--fs-xs); font-weight:600; color:var(--text-primary); cursor:pointer; }
+  .show-more svg{ width:12px; height:12px; }
+
+  /* ===== Mini bar / chart blocks ===== */
+  .mini-bars{ display:flex; align-items:flex-end; gap:2px; height:30px; }
+  .mini-bars i{ width:3px; border-radius:1px; display:block; }
+  .micro-stat{ display:flex; align-items:center; gap:14px; }
+  .micro-stat .figure{ font-size:var(--fs-3xl); font-weight:700; }
+  .micro-stat .meta{ display:flex; flex-direction:column; gap:6px; }
+
+  /* ===== Big chart card ===== */
+  .chart-card{ background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--r-xl); padding:var(--sp-6); }
+  .chart-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:var(--sp-6); flex-wrap:wrap; gap:var(--sp-4); }
+  .chart-stats{ display:flex; gap:var(--sp-8); flex-wrap:wrap; }
+  .chart-legend{ display:flex; gap:var(--sp-5); margin:var(--sp-5) 0; }
+  .legend-item{ display:flex; align-items:center; gap:7px; font-size:var(--fs-sm); color:var(--text-secondary); }
+  .legend-swatch{ width:13px; height:13px; border-radius:4px; }
+
+  .bars-wrap{ position:relative; height:200px; display:flex; align-items:flex-end; gap:4px; padding:0 4px; border-bottom:1px solid var(--border-subtle); }
+  .bar{ flex:1; border-radius:3px 3px 0 0; background:var(--bg-surface-3); position:relative; }
+  .bar.hi{ background:var(--pink-500); }
+  .x-axis{ display:flex; justify-content:space-between; font-size:11px; color:var(--text-tertiary); padding:10px 4px 0; }
+
+  /* ===== List rows (Reports & Masters) ===== */
+  .list-card{ background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--r-xl); }
+  .list-card-head{ display:flex; align-items:center; justify-content:space-between; padding:var(--sp-5) var(--sp-5) var(--sp-4); border-bottom:1px solid var(--border-subtle); font-weight:700; font-size:var(--fs-lg); }
+  .list-row{ display:flex; align-items:center; justify-content:space-between; padding:var(--sp-4) var(--sp-5); font-size:var(--fs-sm); color:var(--text-primary); font-weight:500; }
+  .list-row + .list-row{ border-top:1px solid var(--border-subtle); }
+  .ext-btn{ width:30px; height:30px; border-radius:var(--r-sm); background:var(--bg-surface-3); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); }
+  .ext-btn svg{ width:13px; height:13px; }
+
+  /* ===== Pattern blocks ===== */
+  .pattern{ display:grid; grid-template-columns:280px 1fr; gap:var(--sp-8); padding:var(--sp-8) 0; border-bottom:1px solid var(--border-subtle); }
+  .pattern:last-child{ border-bottom:none; }
+  .pattern-info .ptag{ font-size:var(--fs-xs); font-weight:700; color:var(--pink-500); text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px; }
+  .pattern-info h4{ font-size:var(--fs-xl); font-weight:700; margin-bottom:10px; }
+  .pattern-info p{ font-size:var(--fs-sm); color:var(--text-secondary); line-height:1.65; }
+  .pattern-demo{ background:var(--bg-surface-2); border:1px solid var(--border-subtle); border-radius:var(--r-lg); padding:var(--sp-6); display:flex; align-items:center; justify-content:center; min-height:160px; }
+  @media (max-width:900px){ .pattern{ grid-template-columns:1fr; } }
+
+  /* ===== Documentation ===== */
+  .doc-table{ width:100%; border-collapse:collapse; font-size:var(--fs-sm); }
+  .doc-table th{ text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-tertiary); padding:10px 14px; border-bottom:1px solid var(--border-default); }
+  .doc-table td{ padding:14px; border-bottom:1px solid var(--border-subtle); vertical-align:top; color:var(--text-secondary); }
+  .doc-table td:first-child{ color:var(--text-primary); font-weight:600; white-space:nowrap; }
+
+  .dodont{ display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-5); }
+  .dd-card{ border-radius:var(--r-lg); padding:var(--sp-5); border:1px solid var(--border-subtle); }
+  .dd-do{ background:var(--green-50); border-color:var(--green-100); }
+  .dd-dont{ background:var(--pink-50); border-color:var(--pink-100); }
+  .dd-card .dd-head{ display:flex; align-items:center; gap:8px; font-weight:700; font-size:var(--fs-sm); margin-bottom:10px; }
+  .dd-do .dd-head{ color:var(--green-600); }
+  .dd-dont .dd-head{ color:var(--pink-600); }
+  .dd-card ul{ padding-left:18px; margin:0; display:flex; flex-direction:column; gap:6px; }
+  .dd-card li{ font-size:var(--fs-sm); color:var(--text-secondary); line-height:1.5; }
+
+  .foot-note{ font-size:var(--fs-xs); color:var(--text-tertiary); margin-top:var(--sp-3); }
+  .label-pill{ font-size:11px; font-weight:600; color:var(--text-tertiary); background:var(--bg-surface-3); padding:3px 9px; border-radius:var(--r-full); display:inline-block; margin-bottom:var(--sp-3); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ============ SIDE NAV ============ -->
+  <aside class="ds-nav">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">ERP Design System</div>
+        <div class="brand-sub">v1.0.1</div>
+      </div>
+    </div>
+
+    <div class="nav-group-label">Foundations</div>
+    <a class="nav-link active" href="#overview">Overview</a>
+    <a class="nav-link" href="#colors">Color</a>
+    <a class="nav-link" href="#typography">Typography</a>
+    <a class="nav-link" href="#spacing">Spacing &amp; layout</a>
+    <a class="nav-link" href="#elevation">Radius &amp; elevation</a>
+
+    <div class="nav-group-label">UI Kit</div>
+    <a class="nav-link" href="#buttons">Buttons</a>
+    <a class="nav-link" href="#forms">Form controls</a>
+    <a class="nav-link" href="#badges">Badges &amp; chips</a>
+    <a class="nav-link" href="#avatars">Avatars &amp; icon tiles</a>
+
+    <div class="nav-group-label">Components</div>
+    <a class="nav-link" href="#navigation">Navigation</a>
+    <a class="nav-link" href="#cards">Cards &amp; stat cards</a>
+    <a class="nav-link" href="#dataviz">Data visualization</a>
+    <a class="nav-link" href="#lists">List rows</a>
+
+    <div class="nav-group-label">Behavior</div>
+    <a class="nav-link" href="#patterns">Patterns</a>
+    <a class="nav-link" href="#documentation">Documentation</a>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="ds-main">
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <div class="hero">
+        <div class="hero-kicker"><span class="dot"></span> Extracted from product screenshot · Light theme</div>
+        <h1>A design system reverse-engineered from one <span>ERP dashboard</span>.</h1>
+        <p>This reference catalogs every reusable piece of the source interface — tokens, primitives, composed components, and the interaction patterns that connect them — so new screens can be built that feel native to the original product.</p>
+        <div class="hero-meta">
+          <div class="hero-meta-item"><div class="num">42</div><div class="label">Design tokens</div></div>
+          <div class="hero-meta-item"><div class="num">18</div><div class="label">Components</div></div>
+          <div class="hero-meta-item"><div class="num">6</div><div class="label">Interaction patterns</div></div>
+          <div class="hero-meta-item"><div class="num">14px</div><div class="label">Base font size</div></div>
+        </div>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card pad">
+          <div class="icon-tile tile-pink" style="margin-bottom:16px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="17" r="2.5"/><circle cx="6" cy="12" r="2.5"/><path d="M11 8l-3 2.5M17 16l-4-2"/></svg></div>
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Flat, content-led surfaces</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">White cards on a soft grey canvas, separated by hairline borders rather than heavy shadow — elevation is implied, not dramatized.</p>
+        </div>
+        <div class="card pad">
+          <div class="icon-tile tile-indigo" style="margin-bottom:16px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">One accent does the talking</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Raspberry-pink marks the primary data series and calls to action; indigo, blue and green are reserved for secondary series and status.</p>
+        </div>
+        <div class="card pad">
+          <div class="icon-tile tile-black" style="margin-bottom:16px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 12h6M12 9v6"/></svg></div>
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;">Numbers are the heroes</h3>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Metrics are set large and bold with tabular figures; supporting labels stay small, grey, and quiet so the number reads first.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLOR -->
+    <section id="colors">
+      <div class="section-head">
+        <div class="section-eyebrow">Foundations / 01</div>
+        <h2 class="section-title">Color</h2>
+        <p class="section-desc">A neutral grayscale system for structure, plus four data accents used consistently across charts, badges and icon tiles. Hex values are best-estimate samples from the reference screenshot.</p>
+      </div>
+
+      <h4 class="label-pill">Neutrals</h4>
+      <div class="grid grid-5" style="margin-bottom:32px;">
+        <div class="swatch"><div class="swatch-fill" style="background:var(--bg-page);"></div><div class="swatch-body"><div class="swatch-name">Page</div><span class="swatch-hex">#EEEEF1</span><div class="swatch-use">App canvas background</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);"></div><div class="swatch-body"><div class="swatch-name">Surface</div><span class="swatch-hex">#FFFFFF</span><div class="swatch-use">Cards, sidebar, top bar</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--bg-surface-3);"></div><div class="swatch-body"><div class="swatch-name">Surface Sunken</div><span class="swatch-hex">#F0F0F3</span><div class="swatch-use">Active nav, pills, icon bg</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--border-default);"></div><div class="swatch-body"><div class="swatch-name">Border</div><span class="swatch-hex">#E2E2E7</span><div class="swatch-use">Card &amp; input outlines</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--black);"></div><div class="swatch-body"><div class="swatch-name">Ink / Black</div><span class="swatch-hex">#0A0A0C</span><div class="swatch-use">Primary text &amp; buttons</div></div></div>
+      </div>
+
+      <h4 class="label-pill">Text</h4>
+      <div class="grid grid-3" style="margin-bottom:32px;">
+        <div class="swatch"><div class="swatch-fill" style="background:var(--text-primary);"></div><div class="swatch-body"><div class="swatch-name">Text Primary</div><span class="swatch-hex">#0B0B0E</span><div class="swatch-use">Headings, big numbers</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--text-secondary);"></div><div class="swatch-body"><div class="swatch-name">Text Secondary</div><span class="swatch-hex">#6E6E78</span><div class="swatch-use">Labels, nav items</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--text-tertiary);"></div><div class="swatch-body"><div class="swatch-name">Text Tertiary</div><span class="swatch-hex">#9C9CA6</span><div class="swatch-use">Captions, placeholders</div></div></div>
+      </div>
+
+      <h4 class="label-pill">Data accents</h4>
+      <div class="grid grid-4">
+        <div class="swatch"><div class="swatch-fill" style="background:var(--pink-500);"></div><div class="swatch-body"><div class="swatch-name">Pink / Primary</div><span class="swatch-hex">#EE3D72</span><div class="swatch-use">Income series, primary chart bars, checked states</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--indigo-500);"></div><div class="swatch-body"><div class="swatch-name">Indigo</div><span class="swatch-hex">#6366F1</span><div class="swatch-use">Trend line overlay, default icon tiles</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--blue-500);"></div><div class="swatch-body"><div class="swatch-name">Blue</div><span class="swatch-hex">#3B82F6</span><div class="swatch-use">Expense series</div></div></div>
+        <div class="swatch"><div class="swatch-fill" style="background:var(--green-500);"></div><div class="swatch-body"><div class="swatch-name">Green</div><span class="swatch-hex">#18B463</span><div class="swatch-use">Net profit series, positive badges</div></div></div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section id="typography">
+      <div class="section-head">
+        <div class="section-eyebrow">Foundations / 02</div>
+        <h2 class="section-title">Typography</h2>
+        <p class="section-desc">Inter, set tight and bold for headings and metrics, regular for body and supporting copy. A 14px base keeps dense data screens compact.</p>
+      </div>
+      <div class="card pad">
+        <div class="specimen"><div class="specimen-meta"><div class="tname">Display / 5xl</div><div class="tval">34px · 700 · -0.02em</div></div><div class="specimen-sample" style="font-size:34px;font-weight:700;letter-spacing:-0.02em;">Dashboard</div></div>
+        <div class="specimen"><div class="specimen-meta"><div class="tname">Metric / 4xl</div><div class="tval">30px · 700 · tabular</div></div><div class="specimen-sample" style="font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;">458</div></div>
+        <div class="specimen"><div class="specimen-meta"><div class="tname">Heading / 2xl</div><div class="tval">22px · 700</div></div><div class="specimen-sample" style="font-size:22px;font-weight:700;">Shortcuts Analytics</div></div>
+        <div class="specimen"><div class="specimen-meta"><div class="tname">Title / lg</div><div class="tval">16px · 700</div></div><div class="specimen-sample" style="font-size:16px;font-weight:700;">Reports &amp; Masters</div></div>
+        <div class="specimen"><div class="specimen-meta"><div class="tname">Body / base</div><div class="tval">14px · 500</div></div><div class="specimen-sample" style="font-size:14px;font-weight:500;">Payables · Receivables · Customer Profiles</div></div>
+        <div class="specimen"><div class="specimen-meta"><div class="tname">Label / sm</div><div class="tval">13px · 500 · secondary</div></div><div class="specimen-sample" style="font-size:13px;font-weight:500;color:var(--text-secondary);">One Year Statement</div></div>
+        <div class="specimen"><div class="specimen-meta"><div class="tname">Caption / xs</div><div class="tval">12px · 600 · tertiary</div></div><div class="specimen-sample" style="font-size:12px;font-weight:600;color:var(--text-tertiary);">THIS YEAR</div></div>
+      </div>
+    </section>
+
+    <!-- SPACING -->
+    <section id="spacing">
+      <div class="section-head">
+        <div class="section-eyebrow">Foundations / 03</div>
+        <h2 class="section-title">Spacing &amp; layout</h2>
+        <p class="section-desc">An 4px base scale. Card padding sits at 24px; the page uses a fixed 248px sidebar against a fluid content column with 24px gutters.</p>
+      </div>
+      <div class="grid grid-2" style="gap:32px;">
+        <div class="card pad">
+          <div class="space-row"><span class="space-label">space-1</span><div class="space-bar" style="width:4px;"></div><span class="space-px">4px</span></div>
+          <div class="space-row"><span class="space-label">space-2</span><div class="space-bar" style="width:8px;"></div><span class="space-px">8px</span></div>
+          <div class="space-row"><span class="space-label">space-3</span><div class="space-bar" style="width:12px;"></div><span class="space-px">12px</span></div>
+          <div class="space-row"><span class="space-label">space-4</span><div class="space-bar" style="width:16px;"></div><span class="space-px">16px</span></div>
+          <div class="space-row"><span class="space-label">space-5</span><div class="space-bar" style="width:20px;"></div><span class="space-px">20px</span></div>
+          <div class="space-row"><span class="space-label">space-6</span><div class="space-bar" style="width:24px;"></div><span class="space-px">24px — card padding</span></div>
+          <div class="space-row"><span class="space-label">space-8</span><div class="space-bar" style="width:32px;"></div><span class="space-px">32px</span></div>
+          <div class="space-row"><span class="space-label">space-12</span><div class="space-bar" style="width:48px;"></div><span class="space-px">48px — section gap</span></div>
+        </div>
+        <div class="card pad">
+          <h4 style="font-size:13px;font-weight:700;margin-bottom:14px;">Page grid</h4>
+          <div style="display:flex;gap:8px;height:170px;">
+            <div style="width:28%;background:var(--bg-surface-3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-tertiary);font-weight:600;">Sidebar<br/>248px fixed</div>
+            <div style="flex:1;background:var(--bg-surface-2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-tertiary);font-weight:600;">Content<br/>fluid, max 1480px</div>
+          </div>
+          <p class="foot-note">Stat-card grids run 4 columns ≥1100px, collapsing to 2 then 1 column on smaller viewports.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ELEVATION -->
+    <section id="elevation">
+      <div class="section-head">
+        <div class="section-eyebrow">Foundations / 04</div>
+        <h2 class="section-title">Radius &amp; elevation</h2>
+        <p class="section-desc">Generously rounded corners throughout; depth comes from a 1px border first, with shadow reserved for floating elements like tooltips and dropdowns.</p>
+      </div>
+      <div class="grid grid-5" style="margin-bottom:24px;">
+        <div><div class="radius-demo" style="border-radius:8px;">8px</div><p class="foot-note">r-sm · small buttons</p></div>
+        <div><div class="radius-demo" style="border-radius:12px;">12px</div><p class="foot-note">r-md · inputs, icon tiles</p></div>
+        <div><div class="radius-demo" style="border-radius:16px;">16px</div><p class="foot-note">r-lg · list cards</p></div>
+        <div><div class="radius-demo" style="border-radius:20px;">20px</div><p class="foot-note">r-xl · primary cards</p></div>
+        <div><div class="radius-demo" style="border-radius:999px;">pill</div><p class="foot-note">r-full · pills, avatars</p></div>
+      </div>
+      <div class="grid grid-3">
+        <div><div class="elevation-demo" style="box-shadow:var(--shadow-xs);">shadow-xs</div><p class="foot-note">Default card rest state</p></div>
+        <div><div class="elevation-demo" style="box-shadow:var(--shadow-md);">shadow-md</div><p class="foot-note">Hover / dragged card</p></div>
+        <div><div class="elevation-demo" style="box-shadow:var(--shadow-popover);">shadow-popover</div><p class="foot-note">Tooltips, dropdown menus</p></div>
+      </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section id="buttons">
+      <div class="section-head">
+        <div class="section-eyebrow">UI Kit / 01</div>
+        <h2 class="section-title">Buttons</h2>
+        <p class="section-desc">Solid black is the single primary action per screen (e.g. "Explore Account"). Outline and ghost pills cover everything secondary.</p>
+      </div>
+      <div class="card pad" style="display:flex;flex-direction:column;gap:28px;">
+        <div>
+          <h4 class="label-pill">Primary</h4>
+          <div class="row">
+            <button class="btn btn-primary btn-lg">Explore Account <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg></button>
+            <button class="btn btn-primary btn-md">Save changes</button>
+            <button class="btn btn-primary btn-sm">Add new</button>
+            <button class="btn btn-primary btn-md btn-disabled">Disabled</button>
+          </div>
+        </div>
+        <div>
+          <h4 class="label-pill">Outline</h4>
+          <div class="row">
+            <button class="btn btn-outline btn-md">Import/Export <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+            <button class="btn btn-outline btn-pill btn-sm">Filters</button>
+            <button class="btn btn-outline btn-pill btn-md">Yearly <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          </div>
+        </div>
+        <div>
+          <h4 class="label-pill">Ghost / pill</h4>
+          <div class="row">
+            <button class="btn btn-ghost btn-pill btn-md"><span class="badge-count" style="background:transparent;padding:0;">12</span> New Task</button>
+            <button class="btn btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+            <button class="btn btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM CONTROLS -->
+    <section id="forms">
+      <div class="section-head">
+        <div class="section-eyebrow">UI Kit / 02</div>
+        <h2 class="section-title">Form controls</h2>
+        <p class="section-desc">Inputs and toggles favor soft fill over hard outlines, reserving a visible border + focus ring for editable text fields only.</p>
+      </div>
+      <div class="grid grid-2">
+        <div class="card pad" style="display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <h4 class="label-pill">Search field</h4>
+            <div class="search-field">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              <span>Search</span>
+              <span class="kbd">⌘F</span>
+            </div>
+          </div>
+          <div>
+            <h4 class="label-pill">Text input</h4>
+            <div class="input-field focused" style="color:var(--text-tertiary);">Email address</div>
+          </div>
+          <div>
+            <h4 class="label-pill">Theme toggle</h4>
+            <div class="segment">
+              <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
+              <button class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="card pad" style="display:flex;flex-direction:column;gap:22px;">
+          <div>
+            <h4 class="label-pill">Checkbox / series legend</h4>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <label class="checkbox-row"><span class="chk on"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span> Income</label>
+              <label class="checkbox-row"><span class="chk"></span> Expense</label>
+              <label class="checkbox-row"><span class="chk"></span> Net Profit</label>
+            </div>
+          </div>
+          <div>
+            <h4 class="label-pill">Dropdown pill</h4>
+            <div class="select-pill">Yearly <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BADGES -->
+    <section id="badges">
+      <div class="section-head">
+        <div class="section-eyebrow">UI Kit / 03</div>
+        <h2 class="section-title">Badges &amp; chips</h2>
+        <p class="section-desc">Status is always color + icon, never color alone. Green/pill badges carry trend direction; a single notification dot covers unread state.</p>
+      </div>
+      <div class="card pad">
+        <div class="row" style="gap:16px;">
+          <span class="badge badge-positive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M9 5h10v10"/></svg> +7%</span>
+          <span class="badge badge-negative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5L5 19M5 9V19h10"/></svg> -3%</span>
+          <span class="badge badge-neutral">Draft</span>
+          <span class="badge badge-count">12</span>
+          <span style="position:relative;display:inline-flex;"><span class="btn-icon btn" style="display:inline-flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></span><span class="dot-indicator" style="position:absolute;top:-1px;right:-1px;"></span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- AVATARS / ICON TILES -->
+    <section id="avatars">
+      <div class="section-head">
+        <div class="section-eyebrow">UI Kit / 04</div>
+        <h2 class="section-title">Avatars &amp; icon tiles</h2>
+        <p class="section-desc">Every stat card is introduced by a 42px rounded-square icon tile in a solid accent fill — the only place color blocks appear at this scale.</p>
+      </div>
+      <div class="card pad">
+        <div class="row" style="gap:20px;align-items:center;">
+          <div class="avatar"><span class="status-dot" style="position:absolute;"></span></div>
+          <div class="icon-tile tile-indigo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <div class="icon-tile tile-pink"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="icon-tile tile-blue"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg></div>
+          <div class="icon-tile tile-green"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 21a6.5 6.5 0 0113 0"/><path d="M19 8l1.5 1.5L23 7"/></svg></div>
+          <div class="icon-tile tile-black"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg></div>
+        </div>
+        <p class="foot-note">Status dot: 9px circle, 2px surface-colored ring so it reads cleanly against any avatar image.</p>
+      </div>
+    </section>
+
+    <!-- NAVIGATION -->
+    <section id="navigation">
+      <div class="section-head">
+        <div class="section-eyebrow">Components / 01</div>
+        <h2 class="section-title">Navigation</h2>
+        <p class="section-desc">A grouped sidebar list with an unstyled-until-active state, plus a breadcrumb + utility row for the top bar.</p>
+      </div>
+      <div class="grid" style="grid-template-columns:230px 1fr; gap:32px; align-items:start;">
+        <div class="demo-sidebar">
+          <div class="demo-label">Business</div>
+          <div class="demo-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</div>
+          <div class="demo-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>Accounting</div>
+          <div class="demo-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg>Buying</div>
+          <div class="demo-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18M3 12h18M3 21h18"/></svg>Stock</div>
+          <div class="demo-label">Management</div>
+          <div class="demo-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>CRM</div>
+          <div class="demo-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 005 14.6 1.65 1.65 0 003.51 14H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 008.91 4.6h.09A1.65 1.65 0 0010.51 3.34 1.65 1.65 0 0011 2.83V2a2 2 0 014 0v.09c0 .67.39 1.27 1 1.51"/></svg>Settings</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <div class="card pad">
+            <h4 class="label-pill">Breadcrumb</h4>
+            <div class="breadcrumb">Dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg> <b>Home</b></div>
+          </div>
+          <div class="card pad">
+            <h4 class="label-pill">Top bar utilities</h4>
+            <div class="row" style="justify-content:space-between;">
+              <div class="search-field" style="width:220px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span>Search</span><span class="kbd">⌘F</span></div>
+              <div class="row">
+                <button class="btn btn-ghost btn-pill btn-sm">12 New Task</button>
+                <div class="segment"><button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button><button class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button></div>
+                <span style="position:relative;"><button class="btn-icon btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></button><span class="dot-indicator" style="position:absolute;top:6px;right:6px;"></span></span>
+              </div>
+            </div>
+          </div>
+          <div class="card pad">
+            <h4 class="label-pill">Account switcher (sidebar footer)</h4>
+            <div class="row" style="justify-content:space-between;">
+              <div class="row" style="gap:10px;">
+                <div class="avatar" style="width:34px;height:34px;"><span class="status-dot" style="position:absolute;width:8px;height:8px;"></span></div>
+                <div><div style="font-size:13px;font-weight:700;">Wrath Neon</div><div style="font-size:11px;color:var(--text-tertiary);">johns@gmail.com</div></div>
+              </div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:var(--text-tertiary);"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARDS / STAT CARDS -->
+    <section id="cards">
+      <div class="section-head">
+        <div class="section-eyebrow">Components / 02</div>
+        <h2 class="section-title">Cards &amp; stat cards</h2>
+        <p class="section-desc">The repeating metric pattern: eyebrow label + icon tile, one bold number, a divider, then a trend badge paired with a text action.</p>
+      </div>
+      <div class="grid grid-4">
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Total Item</span><div class="icon-tile tile-indigo" style="width:36px;height:36px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div></div>
+          <div class="stat-number">458</div>
+          <div class="stat-footer"><span class="badge badge-positive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M9 5h10v10"/></svg> +7%</span><span style="font-size:11px;color:var(--text-tertiary);">This Year</span><span class="show-more">Show More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Total Supplier</span><div class="icon-tile tile-indigo" style="width:36px;height:36px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg></div></div>
+          <div class="stat-number">60</div>
+          <div class="stat-footer"><span class="badge badge-positive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M9 5h10v10"/></svg> +7%</span><span style="font-size:11px;color:var(--text-tertiary);">This Year</span><span class="show-more">Show More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Total Sales Invoice</span><div class="icon-tile tile-indigo" style="width:36px;height:36px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;"><path d="M9 14l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg></div></div>
+          <div class="stat-number">240</div>
+          <div class="stat-footer"><span class="badge badge-positive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M9 5h10v10"/></svg> +7%</span><span style="font-size:11px;color:var(--text-tertiary);">This Year</span><span class="show-more">Show More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Total Lead</span><div class="icon-tile tile-indigo" style="width:36px;height:36px;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;"><circle cx="9" cy="7" r="4"/><path d="M1 21v-2a4 4 0 014-4h8a4 4 0 014 4v2"/><path d="M19 8v6M16 11h6"/></svg></div></div>
+          <div class="stat-number">158</div>
+          <div class="stat-footer"><span class="badge badge-positive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M9 5h10v10"/></svg> +7%</span><span style="font-size:11px;color:var(--text-tertiary);">This Year</span><span class="show-more">Show More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
+        </div>
+      </div>
+      <p class="foot-note">Anatomy: 20px radius card · 24px padding · 36px icon tile · 30px tabular number · 1px divider before footer.</p>
+    </section>
+
+    <!-- DATA VIZ -->
+    <section id="dataviz">
+      <div class="section-head">
+        <div class="section-eyebrow">Components / 03</div>
+        <h2 class="section-title">Data visualization</h2>
+        <p class="section-desc">Three-series summary header, a checkbox legend that toggles series visibility, and a combo bar + trend-line chart with a range highlight and floating tooltip.</p>
+      </div>
+      <div class="chart-card">
+        <div class="chart-head">
+          <div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px;">One Year Statement</div>
+            <div style="font-size:20px;font-weight:700;">Shortcuts Analytics</div>
+          </div>
+          <div class="row">
+            <div class="select-pill">Yearly <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+            <button class="btn btn-outline btn-pill btn-sm">Filters</button>
+          </div>
+        </div>
+
+        <div class="chart-stats">
+          <div class="micro-stat">
+            <div class="figure">72</div>
+            <div class="meta">
+              <span class="badge badge-positive" style="width:fit-content;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 19L19 5M9 5h10v10"/></svg></span>
+              <span style="font-size:12px;color:var(--text-secondary);">Income</span>
+            </div>
+            <div class="mini-bars" id="mb1"></div>
+          </div>
+          <div class="micro-stat">
+            <div class="figure">72</div>
+            <div class="meta">
+              <span class="badge badge-positive" style="width:fit-content;background:var(--blue-100);color:var(--blue-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 19L19 5M9 5h10v10"/></svg></span>
+              <span style="font-size:12px;color:var(--text-secondary);">Expense</span>
+            </div>
+            <div class="mini-bars" id="mb2"></div>
+          </div>
+          <div class="micro-stat">
+            <div class="figure">72</div>
+            <div class="meta">
+              <span class="badge badge-positive" style="width:fit-content;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 19L19 5M9 5h10v10"/></svg></span>
+              <span style="font-size:12px;color:var(--text-secondary);">Net Profits</span>
+            </div>
+            <div class="mini-bars" id="mb3"></div>
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--pink-500);"></span>Income</span>
+          <span class="legend-item"><span class="chk" style="width:13px;height:13px;"></span>Expense</span>
+          <span class="legend-item"><span class="chk" style="width:13px;height:13px;"></span>Net Profit</span>
+        </div>
+
+        <div style="position:relative;">
+          <div class="tooltip" style="position:absolute; top:-6px; left:38%; z-index:2;">
+            <div class="tt-val">20 M</div>
+            <div class="tt-sub">2024 – 25</div>
+          </div>
+          <div class="bars-wrap" id="barsWrap"></div>
+          <div class="x-axis">
+            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+          </div>
+        </div>
+      </div>
+      <p class="foot-note">Highlighted range (Mar–May) uses the primary pink at full opacity; all other months drop to the neutral surface-sunken fill so the selected period reads instantly.</p>
+    </section>
+
+    <!-- LIST ROWS -->
+    <section id="lists">
+      <div class="section-head">
+        <div class="section-eyebrow">Components / 04</div>
+        <h2 class="section-title">List rows</h2>
+        <p class="section-desc">Grouped link lists for reports &amp; record types: a bold card title with an overflow action, then evenly divided rows ending in an external-link button.</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="list-card">
+          <div class="list-card-head">Accounting <button class="btn-icon btn" style="width:30px;height:30px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button></div>
+          <div class="list-row">Payables <span class="ext-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg></span></div>
+          <div class="list-row">Receivables <span class="ext-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg></span></div>
+        </div>
+        <div class="list-card">
+          <div class="list-card-head">Stock <button class="btn-icon btn" style="width:30px;height:30px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button></div>
+          <div class="list-row">Stock Overview <span class="ext-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg></span></div>
+          <div class="list-row">Product Categories <span class="ext-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg></span></div>
+        </div>
+        <div class="list-card">
+          <div class="list-card-head">CRM <button class="btn-icon btn" style="width:30px;height:30px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button></div>
+          <div class="list-row">Leads Management <span class="ext-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg></span></div>
+          <div class="list-row">Customer Profiles <span class="ext-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PATTERNS -->
+    <section id="patterns">
+      <div class="section-head">
+        <div class="section-eyebrow">Behavior / 01</div>
+        <h2 class="section-title">Patterns</h2>
+        <p class="section-desc">Solutions for how groups of components behave together — not single elements, but the interactions that connect them.</p>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-info">
+          <div class="ptag">Pattern 01</div>
+          <h4>Series toggling</h4>
+          <p>The Income / Expense / Net Profit checkboxes act as a visibility legend, not a filter form. Checking a box adds that series' bars and re-colors them in its accent; unchecking fades it back to the neutral surface tone. At least one series stays checked at all times.</p>
+        </div>
+        <div class="pattern-demo">
+          <div style="display:flex;gap:24px;">
+            <label class="checkbox-row"><span class="chk on"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>Income (shown)</label>
+            <label class="checkbox-row" style="opacity:.5;"><span class="chk"></span>Expense (hidden)</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-info">
+          <div class="ptag">Pattern 02</div>
+          <h4>Range highlight + tooltip</h4>
+          <p>Hovering or selecting a span of months brightens that range to full-opacity pink while the rest of the chart recedes to a neutral fill. A floating tooltip anchors above the midpoint of the selection, showing the aggregate value and date range.</p>
+        </div>
+        <div class="pattern-demo">
+          <div style="display:flex;align-items:flex-end;gap:3px;height:80px;">
+            <div style="width:8px;height:30%;background:var(--bg-surface-3);border-radius:2px;"></div>
+            <div style="width:8px;height:45%;background:var(--bg-surface-3);border-radius:2px;"></div>
+            <div style="width:8px;height:60%;background:var(--pink-500);border-radius:2px;"></div>
+            <div style="width:8px;height:80%;background:var(--pink-500);border-radius:2px;"></div>
+            <div style="width:8px;height:65%;background:var(--pink-500);border-radius:2px;"></div>
+            <div style="width:8px;height:50%;background:var(--bg-surface-3);border-radius:2px;"></div>
+            <div style="width:8px;height:40%;background:var(--bg-surface-3);border-radius:2px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-info">
+          <div class="ptag">Pattern 03</div>
+          <h4>Stat card → drill-down</h4>
+          <p>Every metric card ends in a quiet "Show More" text-link rather than wrapping the whole card in a click target — this keeps the number selectable/copyable and avoids accidental navigation while scanning.</p>
+        </div>
+        <div class="pattern-demo">
+          <div class="stat-footer" style="border:none;width:100%;">
+            <span class="badge badge-positive">+7%</span><span style="font-size:11px;color:var(--text-tertiary);">This Year</span>
+            <span class="show-more">Show More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-info">
+          <div class="ptag">Pattern 04</div>
+          <h4>Carousel overview</h4>
+          <p>Horizontally-paginated card rows (e.g. "Explore Project Overview") use a pair of round prev/next icon buttons docked top-right of the section header, rather than arrows on the cards themselves, keeping pagination separate from content.</p>
+        </div>
+        <div class="pattern-demo">
+          <div class="row" style="gap:8px;">
+            <button class="btn-icon btn" style="width:34px;height:34px;border-radius:999px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <button class="btn-icon btn" style="width:34px;height:34px;border-radius:999px;background:var(--black);color:white;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-info">
+          <div class="ptag">Pattern 05</div>
+          <h4>Responsive sidebar collapse</h4>
+          <p>The top-left rail icon collapses the sidebar to icon-only at narrow widths; labels fade out while active-state background and icon stay, preserving wayfinding without text.</p>
+        </div>
+        <div class="pattern-demo">
+          <div class="row" style="gap:16px;">
+            <div style="width:60px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:12px;padding:10px 0;display:flex;flex-direction:column;gap:8px;align-items:center;">
+              <div style="width:34px;height:34px;border-radius:8px;background:var(--bg-surface-3);"></div>
+              <div style="width:34px;height:34px;border-radius:8px;"></div>
+              <div style="width:34px;height:34px;border-radius:8px;"></div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" style="width:18px;"><path d="M9 18l6-6-6-6"/></svg>
+            <div style="width:160px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;">
+              <div style="height:34px;border-radius:8px;background:var(--bg-surface-3);"></div>
+              <div style="height:34px;border-radius:8px;"></div>
+              <div style="height:34px;border-radius:8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pattern">
+        <div class="pattern-info">
+          <div class="ptag">Pattern 06</div>
+          <h4>Notification &amp; presence dots</h4>
+          <p>A single status dot vocabulary covers two meanings by position and color: top-right of the bell (pink) means unread, bottom-right of an avatar (green) means online — never combined on the same element.</p>
+        </div>
+        <div class="pattern-demo">
+          <div class="row" style="gap:28px;">
+            <span style="position:relative;"><button class="btn-icon btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></button><span class="dot-indicator" style="position:absolute;top:6px;right:6px;"></span></span>
+            <div class="avatar"><span class="status-dot" style="position:absolute;bottom:0;right:0;"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCUMENTATION -->
+    <section id="documentation">
+      <div class="section-head">
+        <div class="section-eyebrow">Behavior / 02</div>
+        <h2 class="section-title">Documentation</h2>
+        <p class="section-desc">Usage guidance for applying this system consistently to new screens.</p>
+      </div>
+
+      <h4 class="label-pill">Component usage</h4>
+      <div class="card" style="margin-bottom:32px; overflow:hidden;">
+        <table class="doc-table">
+          <thead><tr><th>Component</th><th>Use for</th><th>Avoid</th></tr></thead>
+          <tbody>
+            <tr><td>Primary button (black)</td><td>One decisive action per view, e.g. "Explore Account"</td><td>More than one per screen — dilutes the action hierarchy</td></tr>
+            <tr><td>Pink accent</td><td>The single primary data series, checked states, and the one "hero" CTA</td><td>Decorative use, or applying it to more than one series at once</td></tr>
+            <tr><td>Stat card</td><td>A single countable metric with a year-over-year trend</td><td>Multi-metric comparisons — use the chart card instead</td></tr>
+            <tr><td>List card</td><td>Grouping 2–6 navigational links under one record type</td><td>Long lists past ~6 items — paginate or link to a full index</td></tr>
+            <tr><td>Tooltip</td><td>Contextual value on hover/selection inside charts</td><td>Persistent help text — use inline captions instead</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 class="label-pill">Do &amp; don't</h4>
+      <div class="dodont" style="margin-bottom:32px;">
+        <div class="dd-card dd-do">
+          <div class="dd-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M5 13l4 4L19 7"/></svg>Do</div>
+          <ul>
+            <li>Pair every icon tile with a plain-text label, never icon alone</li>
+            <li>Keep one pink call-to-action visible per screen</li>
+            <li>Set numeric values in tabular figures so columns align</li>
+            <li>Use 1px borders before adding shadow</li>
+          </ul>
+        </div>
+        <div class="dd-card dd-dont">
+          <div class="dd-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M18 6L6 18M6 6l12 12"/></svg>Don't</div>
+          <ul>
+            <li>Mix more than one rounded-corner radius within a single card</li>
+            <li>Use red/pink for anything that isn't the primary series or a negative trend</li>
+            <li>Stack two outline buttons of equal visual weight as the main actions</li>
+            <li>Drop the divider between a card's metric and its footer actions</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 class="label-pill">Content &amp; voice</h4>
+      <div class="card pad" style="margin-bottom:32px;">
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;">Labels name what the person controls, in plain sentence case — "Show More," "Filters," "New Task" — never system jargon. Section eyebrows ("One Year Statement") set context before the headline so the number that follows is never ambiguous. Trend badges always pair the percentage with a directional icon so meaning doesn't depend on color alone.</p>
+      </div>
+
+      <h4 class="label-pill">Accessibility</h4>
+      <div class="card pad">
+        <table class="doc-table">
+          <tbody>
+            <tr><td>Contrast</td><td>Body text (#6E6E78) on white passes AA at 14px; tertiary gray (#9C9CA6) is reserved for non-essential captions only</td></tr>
+            <tr><td>Hit targets</td><td>All icon buttons are 40×40px minimum, even where the visible glyph is 15–18px</td></tr>
+            <tr><td>Focus state</td><td>Inputs and buttons receive a 3px indigo ring at 12% opacity on keyboard focus, matching the active checkbox/select accent</td></tr>
+            <tr><td>Color independence</td><td>Trend badges and series legends always carry an icon or label alongside color</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Mini sparkline bars for the three header micro-stats
+  function fillBars(id, color, seed){
+    const el = document.getElementById(id);
+    if(!el) return;
+    let html = '';
+    for(let i=0;i<14;i++){
+      const h = 6 + Math.round(Math.abs(Math.sin(i*0.6+seed))*24);
+      html += `<i style="height:${h}px;background:${i>5&&i<10?color:'var(--bg-surface-3)'}"></i>`;
+    }
+    el.innerHTML = html;
+  }
+  fillBars('mb1','var(--pink-500)',0.3);
+  fillBars('mb2','var(--blue-500)',1.1);
+  fillBars('mb3','var(--green-500)',2.0);
+
+  // Big bar chart with highlighted Mar–May range + indigo trend line
+  (function(){
+    const wrap = document.getElementById('barsWrap');
+    const months = 36;
+    let html = '';
+    for(let i=0;i<months;i++){
+      const base = 30 + Math.abs(Math.sin(i*0.35))*50;
+      const isHi = i>=9 && i<=16;
+      html += `<div class="bar ${isHi?'hi':''}" style="height:${base}%;"></div>`;
+    }
+    wrap.innerHTML = html;
+
+    const svgLine = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svgLine.setAttribute('viewBox','0 0 360 100');
+    svgLine.setAttribute('preserveAspectRatio','none');
+    svgLine.style.position='absolute'; svgLine.style.inset='0'; svgLine.style.width='100%'; svgLine.style.height='100%'; svgLine.style.pointerEvents='none';
+    let d = 'M';
+    for(let i=0;i<months;i++){
+      const x = (i/(months-1))*360;
+      const y = 70 - Math.abs(Math.sin(i*0.3+1))*40;
+      d += `${i===0?'':'L'}${x},${y} `;
+    }
+    svgLine.innerHTML = `<path d="${d}" fill="none" stroke="var(--indigo-500)" stroke-width="2" stroke-dasharray="1 5" stroke-linecap="round"/>`;
+    wrap.appendChild(svgLine);
+  })();
+
+  // Scroll-spy for left nav
+  const links = document.querySelectorAll('.ds-nav a.nav-link');
+  const sections = Array.from(links).map(a=>document.querySelector(a.getAttribute('href')));
+  window.addEventListener('scroll', ()=>{
+    let current = sections[0];
+    sections.forEach(s=>{ if(s && window.scrollY >= s.offsetTop - 120) current = s; });
+    links.forEach(l=>{ l.classList.toggle('active', l.getAttribute('href') === '#'+current.id); });
+  });
+</script>
+</body>
+</html>
